@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryText"
+    tools:context=".SplashActivity">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/logo_from_spalshact"
+            android:layout_width="262dp"
+            android:layout_height="111dp"
+            android:contentDescription="@string/logo"
+            android:src="@drawable/splash" />
+
+        <TextView
+            android:id="@+id/splash_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:fontFamily="casual"
+            android:text="@string/app_name"
+            android:textColor="@color/colorAccentDark"
+            android:textSize="50sp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:textColor="@color/colorAccentDark"
+            android:fontFamily="casual"
+            android:textSize="20sp"
+            android:textAlignment="viewEnd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/company_name"
+            android:gravity="end" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

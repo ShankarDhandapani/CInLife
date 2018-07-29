@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "542872182457",
+    "firebase_url": "https://cinlife-b16ef.firebaseio.com",
+    "project_id": "cinlife-b16ef",
+    "storage_bucket": "cinlife-b16ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542872182457:android:b1af22c6af3f33c9",
+        "android_client_info": {
+          "package_name": "com.cinlife.cingrous.cinlife"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "542872182457-sv53lq4fua4qh80vcapdlshvic679vie.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cinlife.cingrous.cinlife",
+            "certificate_hash": "f1fa4ec4d3b100b81add73abbd0f040aafda1b87"
+          }
+        },
+        {
+          "client_id": "542872182457-s92cegt10987dnvvq6lv3h5g4arr9pj1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAHn6f8NQ_-Rd50RhgtX30xo_WPUTrnlQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "542872182457-s92cegt10987dnvvq6lv3h5g4arr9pj1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
