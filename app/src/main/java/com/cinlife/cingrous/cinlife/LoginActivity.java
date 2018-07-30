@@ -18,7 +18,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private EditText email_from_login, password_from_login;
-
+    String email,pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +29,14 @@ public class LoginActivity extends AppCompatActivity {
         email_from_login = findViewById(R.id.et_email_from_login);
         password_from_login = findViewById(R.id.et_pass_from_login);
 
+
+
         findViewById(R.id.btn_login_from_login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String email = email_from_login.getText().toString().trim();
-                String pass = password_from_login.getText().toString().trim();
+                email = email_from_login.getText().toString().trim();
+                pass = password_from_login.getText().toString().trim();
 
                 if (!email.equals("") || !pass.equals("")) {
                     mAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -49,6 +51,9 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                     });
+
+
+
                 }else {
                     Toast.makeText(LoginActivity.this, "Email and Password can't be empty", Toast.LENGTH_LONG).show();
                 }
@@ -68,12 +73,14 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUI(FirebaseUser currentUser) {
         String Uid = currentUser.getUid();
         if (Uid.equals("1HeXJ0snBoW1kfuKOUsKr5OnTQD3")){
-            startActivity(new Intent(LoginActivity.this, Management.class));
+            Intent intent1 = new Intent(LoginActivity.this, Management.class);
+            startActivity(intent1);
             Toast.makeText(LoginActivity.this, "Management Login", Toast.LENGTH_LONG).show();
         }
         else {
-            startActivity(new Intent(LoginActivity.this, Student.class));
-            Toast.makeText(LoginActivity.this, "Student Login", Toast.LENGTH_LONG).show();
+            Intent intent2 = new Intent(LoginActivity.this, Student.class);
+            startActivity(intent2);
+            //Toast.makeText(LoginActivity.this, "Student Login", Toast.LENGTH_LONG).show();
         }
         finish();
     }
