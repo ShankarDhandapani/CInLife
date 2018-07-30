@@ -101,7 +101,7 @@ public class Student extends AppCompatActivity {
         AlertDialog alertDialog = new AlertDialog.Builder(
                 Student.this)
                 .setTitle(R.string.logout)
-                .setMessage("Are you sure you want to Logout?")
+                .setMessage("Are you sure.Do you want to Logout?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
