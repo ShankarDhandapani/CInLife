@@ -22,4 +22,6 @@
     <string name="gender">Gender</string>
     <string name="date_pattern_in_duration">DD/MM/YYYY</string>
     <string name="duration">Duration</string>
+    <string name="cancel">Cancel</string>
+
 </resources>

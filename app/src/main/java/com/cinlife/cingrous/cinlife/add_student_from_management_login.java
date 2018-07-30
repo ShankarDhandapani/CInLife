@@ -1,8 +1,14 @@
 package com.cinlife.cingrous.cinlife;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
@@ -68,4 +74,38 @@ public class add_student_from_management_login extends AppCompatActivity {
                 }, to_mYear, to_mMonth, to_mDay);
         datePickerDialog.show();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_at_add_student_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.cancel_option_at_add_worker_activity:
+                cancel_btn();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void cancel_btn() {
+        AlertDialog alertDialog = new AlertDialog.Builder(
+                add_student_from_management_login.this)
+                .setTitle(R.string.cancel)
+                .setMessage("Do you want to Cancel?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(add_student_from_management_login.this, Management.class));
+                        finish();
+                    }
+                }).setNegativeButton("No", null)
+                .show();
+    }
+
 }
