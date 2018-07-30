@@ -4,19 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Student">
+    tools:context=".ScannerActivity">
 
-    <android.support.design.widget.FloatingActionButton
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/zxing_barcode_scanner"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:zxing_scanner_layout="@layout/custom_scanner" />
+
+    <Button
+        android:id="@+id/switch_flashlight"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="24dp"
-        android:src="@drawable/icon_qr_scanner"
-        android:id="@+id/float_btn_qr_scan"
-        android:layout_marginRight="24dp"
-        android:layout_alignParentRight="true" />
-
+        android:layout_centerHorizontal="true"
+        android:text="@string/turn_off_flashlight" />
 
 </RelativeLayout>

@@ -19,7 +19,8 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".Management" />
         <activity android:name=".Student" />
-        <activity android:name=".add_student_from_management_login"></activity>
+        <activity android:name=".add_student_from_management_login" />
+        <activity android:name=".ScannerActivity" />
     </application>
 
 </manifest>

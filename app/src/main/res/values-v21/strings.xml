@@ -22,4 +22,9 @@
     <string name="workerimageview">WorkerImageView</string>
     <string name="gender">Gender</string>
     <string name="date_pattern_in_duration">DD/MM/YYYY</string>
+    <string name="duration">Duration</string>
+    <string name="cancel">Cancel</string>
+    <string name="message">Place the QR Code between the Scanner</string>
+    <string name="turn_off_flashlight">Turn on Flashlight</string>
+    <string name="turn_on_flashlight">Turn off Flashlight</string>
 </resources>
