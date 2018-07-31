@@ -50,6 +50,35 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/college_of_the_student_yet_to_be_created"
+                    android:hint="@string/college" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:paddingTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="10" >
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/name_of_the_project_of_the_student_yet_to_be_created"
+                    android:hint="@string/name_of_the_project" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:paddingTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="10" >
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/address_of_the_new_student"
                     android:hint="@string/Address"
                     android:inputType="textLongMessage"/>
             </android.support.design.widget.TextInputLayout>
@@ -65,6 +94,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/phone_number"
                     android:maxLength="10"
+                    android:id="@+id/phone_number_of_the_new_user"
                     android:inputType="phone" />
             </android.support.design.widget.TextInputLayout>
 
@@ -131,6 +161,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/email_id_of_new_user"
                     android:hint="@string/email_id"
                     android:inputType="textEmailAddress" />
             </android.support.design.widget.TextInputLayout>
@@ -149,6 +180,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
                     android:inputType="textPassword"
+                    android:id="@+id/password_of_the_new_user"
                     android:layout_weight="80"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -166,6 +198,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/confirm_password"
                     android:inputType="textPassword"
+                    android:id="@+id/confirm_password_of_the_new_user"
                     android:layout_weight="80"/>
             </android.support.design.widget.TextInputLayout>
 

@@ -8,33 +8,40 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 public class add_student_from_management_login extends AppCompatActivity {
 
     private int from_mYear, from_mMonth, from_mDay, to_mYear, to_mMonth, to_mDay;
     TextView date_from, date_to;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("Users");
-    EditText new_user_name,new_user_address,new_user_phone_number,new_user_email,new_uesr_password,
-            new_user_confirm_password,new_user_duration_from_date,new_user_duration_to_date;
+    FirebaseAuth mAuth;
+    DatabaseReference myRef = database.getReference();
+    EditText new_user_name,new_user_address,new_user_phone_number,new_user_email,new_user_password,
+            new_user_confirm_password,college_name,name_of_the_project;
+    String name,address,phone_number,email_id,password,confirm_password,duration_from_date,duration_to_date,college,project_name;
+    TextView new_user_duration_from_date,new_user_duration_to_date;
+
+    RadioGroup gender;
 
 
     @Override
@@ -42,8 +49,26 @@ public class add_student_from_management_login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_student_from_management_login);
 
+        mAuth = FirebaseAuth.getInstance();
+
+
+        /*male = findViewById(R.id.male_radio_button);
+        female = findViewById(R.id.female_radio_button);
+        other = findViewById(R.id.other_radio_button);*/
+
         date_from = findViewById(R.id.date_from_from_add_details);
         date_to = findViewById(R.id.date_to_from_add_details);
+
+        new_user_name = findViewById(R.id.name_of_the_student_yet_to_be_created);
+        new_user_address = findViewById(R.id.address_of_the_new_student);
+        new_user_phone_number = findViewById(R.id.phone_number_of_the_new_user);
+        new_user_email = findViewById(R.id.email_id_of_new_user);
+        new_user_password = findViewById(R.id.password_of_the_new_user);
+        new_user_confirm_password = findViewById(R.id.confirm_password_of_the_new_user);
+        new_user_duration_from_date = findViewById(R.id.date_from_from_add_details);
+        new_user_duration_to_date = findViewById(R.id.date_to_from_add_details);
+        college_name = findViewById(R.id.college_of_the_student_yet_to_be_created);
+        name_of_the_project = findViewById(R.id.name_of_the_project_of_the_student_yet_to_be_created);
 
     }
 
@@ -128,8 +153,69 @@ public class add_student_from_management_login extends AppCompatActivity {
     }
 
     public void create_user_account(View view) {
-        myRef.setValue("Hello");
+
+        gender = findViewById(R.id.gender_at_add_student);
+
+        int selectedId = gender.getCheckedRadioButtonId();
+// find the radiobutton by returned id
+        gender = findViewById(selectedId);
+
+        name = new_user_name.getText().toString().trim();
+        address = new_user_address.getText().toString().trim();
+        phone_number = new_user_phone_number.getText().toString().trim();
+        email_id = new_user_email.getText().toString().trim();
+        password = new_user_password.getText().toString().trim();
+        confirm_password = new_user_confirm_password.getText().toString().trim();
+        duration_from_date = new_user_duration_from_date.getText().toString().trim();
+        duration_to_date = new_user_duration_to_date.getText().toString().trim();
+        college = college_name.getText().toString().trim();
+        project_name = name_of_the_project.getText().toString().trim();
+/*
         Toast.makeText(add_student_from_management_login.this, "Creating User ....", Toast.LENGTH_LONG).show();
+
+        myRef.child("Users").child(email_id).child("Name").setValue(name);
+        myRef.child("Users").child(email_id).child("Address").setValue(address);
+        myRef.child("Users").child(email_id).child("Phone Number").setValue(phone_number);
+        myRef.child("Users").child(email_id).child("Gender").setValue(gender);
+        myRef.child("Users").child(email_id).child("Name of the college").setValue(college);
+        myRef.child("Users").child(email_id).child("Name of the project").setValue(project_name);
+        myRef.child("Users").child(email_id).child("Duration").child("From").setValue(duration_from_date);
+        myRef.child("Users").child(email_id).child("Duration").child("To").setValue(duration_to_date);
+
+        mAuth.createUserWithEmailAndPassword(email_id, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Toast.makeText(add_student_from_management_login.this, "Account for "+name+" is created successfully.",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(add_student_from_management_login.this, "User not created",
+                                    Toast.LENGTH_SHORT).show();
+
+                        }
+
+                        // ...
+                    }
+                });
+*/
+
+
+        new AlertDialog.Builder(
+                add_student_from_management_login.this)
+                .setTitle(R.string.success)
+                .setMessage("Account for "+gender+" is created successfully.")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(add_student_from_management_login.this, Management.class));
+                        finish();
+                    }
+                })
+                .show();
+
 
     }
 }
