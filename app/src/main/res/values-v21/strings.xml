@@ -25,6 +25,8 @@
     <string name="duration">Duration</string>
     <string name="cancel">Cancel</string>
     <string name="message">Place the QR Code between the Scanner</string>
-    <string name="turn_off_flashlight">Turn on Flashlight</string>
-    <string name="turn_on_flashlight">Turn off Flashlight</string>
+    <string name="turn_off_flashlight">Turn off Flashlight</string>
+    <string name="turn_on_flashlight">Turn on Flashlight</string>
+    <string name="management">Management</string>
+    <string name="student">Student</string>
 </resources>

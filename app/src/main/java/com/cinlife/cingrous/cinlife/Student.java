@@ -32,6 +32,8 @@ public class Student extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
+        setTitle(getString(R.string.student));
+
         mAuth = FirebaseAuth.getInstance();
 
 
