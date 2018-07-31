@@ -1,8 +1,10 @@
 package com.cinlife.cingrous.cinlife;
 
+
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,15 +13,29 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.ImageButton;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class add_student_from_management_login extends AppCompatActivity {
 
     private int from_mYear, from_mMonth, from_mDay, to_mYear, to_mMonth, to_mDay;
     TextView date_from, date_to;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("Users");
+    EditText new_user_name,new_user_address,new_user_phone_number,new_user_email,new_uesr_password,
+            new_user_confirm_password,new_user_duration_from_date,new_user_duration_to_date;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +58,12 @@ public class add_student_from_management_login extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
 
+
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
-
-                        date_from.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                        String from_date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+                        date_from.setText(from_date);
 
                     }
                 }, from_mYear, from_mMonth, from_mDay);
@@ -64,11 +81,13 @@ public class add_student_from_management_login extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
 
+
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
 
-                        date_to.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                        String to_date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+                        date_to.setText(to_date);
 
                     }
                 }, to_mYear, to_mMonth, to_mDay);
@@ -94,7 +113,7 @@ public class add_student_from_management_login extends AppCompatActivity {
     }
 
     private void cancel_btn() {
-        AlertDialog alertDialog = new AlertDialog.Builder(
+        new AlertDialog.Builder(
                 add_student_from_management_login.this)
                 .setTitle(R.string.cancel)
                 .setMessage("Do you want to Cancel?")
@@ -108,4 +127,9 @@ public class add_student_from_management_login extends AppCompatActivity {
                 .show();
     }
 
+    public void create_user_account(View view) {
+        myRef.setValue("Hello");
+        Toast.makeText(add_student_from_management_login.this, "Creating User ....", Toast.LENGTH_LONG).show();
+
+    }
 }

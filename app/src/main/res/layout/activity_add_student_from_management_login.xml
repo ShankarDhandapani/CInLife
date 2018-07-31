@@ -36,6 +36,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/name_of_the_student_yet_to_be_created"
                     android:hint="@string/name" />
 
             </android.support.design.widget.TextInputLayout>
@@ -67,7 +68,7 @@
                     android:inputType="phone" />
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <!--<android.support.design.widget.TextInputLayout
                 android:paddingTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,7 +80,47 @@
                     android:hint="@string/gender"
                     android:inputType="phone"
                     android:maxLength="10" />
-            </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gender_at_add_worker"
+                android:textColor="@color/colorAccentText"
+                android:textSize="15sp" />
+
+            <RadioGroup
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/gender_at_add_student"
+                android:orientation="horizontal">
+
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/male_radio_button"
+                        android:text="@string/male"
+                        android:layout_weight="10" />
+
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/female_radio_button"
+                        android:text="@string/female"
+                        android:layout_weight="10"/>
+
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/other_radio_button"
+                        android:text="@string/other"
+                        android:layout_weight="10"/>
+
+                </RadioGroup>
+
+
+
 
             <android.support.design.widget.TextInputLayout
                 android:paddingTop="10dp"
@@ -225,6 +266,7 @@
         android:id="@+id/create_account_button_at_add_worker_tab_in_manager_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="create_user_account"
         android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

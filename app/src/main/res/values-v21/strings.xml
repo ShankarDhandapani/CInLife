@@ -29,4 +29,8 @@
     <string name="turn_on_flashlight">Turn on Flashlight</string>
     <string name="management">Management</string>
     <string name="student">Student</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="other">Other</string>
+    <string name="gender_at_add_worker">Gender :</string>
 </resources>
