@@ -35,4 +35,5 @@
     <string name="success">Success</string>
     <string name="college">College</string>
     <string name="name_of_the_project">Name of the Project</string>
+    <string name="addUserTitle">Add User</string>
 </resources>

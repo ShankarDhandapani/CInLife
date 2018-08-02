@@ -48,13 +48,9 @@ public class add_student_from_management_login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_student_from_management_login);
+        setTitle(getString(R.string.addUserTitle));
 
         mAuth = FirebaseAuth.getInstance();
-
-
-        /*male = findViewById(R.id.male_radio_button);
-        female = findViewById(R.id.female_radio_button);
-        other = findViewById(R.id.other_radio_button);*/
 
         date_from = findViewById(R.id.date_from_from_add_details);
         date_to = findViewById(R.id.date_to_from_add_details);
@@ -187,8 +183,6 @@ public class add_student_from_management_login extends AppCompatActivity {
                             FirebaseUser auth = task.getResult().getUser();
                             user_add_Uid = auth.getUid();
                             // Sign in success, update UI with the signed-in user's information
-                            /*Toast.makeText(add_student_from_management_login.this, "Account for "+name+" is created successfully.",
-                                    Toast.LENGTH_SHORT).show();*/
 
                             myRef.child("Users").child(user_add_Uid).child("Name").setValue(name);
                             myRef.child("Users").child(user_add_Uid).child("Address").setValue(address);
@@ -222,31 +216,5 @@ public class add_student_from_management_login extends AppCompatActivity {
                         // ...
                     }
                 });
-
-
-        /*myRef.child("Users").child(user_add_Uid).child("Name").setValue(name);
-        myRef.child("Users").child(user_add_Uid).child("Address").setValue(address);
-        myRef.child("Users").child(user_add_Uid).child("Phone Number").setValue(phone_number);
-        //myRef.child("Users").child(user_add_Uid).child("Gender").setValue(gender);
-        myRef.child("Users").child(user_add_Uid).child("Name of the college").setValue(college);
-        myRef.child("Users").child(user_add_Uid).child("Name of the project").setValue(project_name);
-        myRef.child("Users").child(user_add_Uid).child("Duration").child("From").setValue(duration_from_date);
-        myRef.child("Users").child(user_add_Uid).child("Duration").child("To").setValue(duration_to_date);*/
-
-
-        /*new AlertDialog.Builder(
-                add_student_from_management_login.this)
-                .setTitle(R.string.success)
-                .setMessage("Account for "+name+" is created successfully.")
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(add_student_from_management_login.this, Management.class));
-                        finish();
-                    }
-                })
-                .show();*/
-
-
     }
 }
