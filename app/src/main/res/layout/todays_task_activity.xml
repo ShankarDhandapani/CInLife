@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="20">
+
+        <android.support.design.widget.TextInputLayout
+            android:paddingTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="10">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/today_s_activity_content_at_out_qr_code_found"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/today_s_activity"
+                android:inputType="textMultiLine" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/today_s_activity_submit_button_at_out_qr_code_found"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryText"
+            android:text="@string/submit"
+            android:layout_weight="10"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

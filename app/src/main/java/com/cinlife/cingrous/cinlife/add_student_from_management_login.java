@@ -173,48 +173,50 @@ public class add_student_from_management_login extends AppCompatActivity {
         college = college_name.getText().toString().trim();
         project_name = name_of_the_project.getText().toString().trim();
 
-        Toast.makeText(add_student_from_management_login.this, "Creating User ....", Toast.LENGTH_LONG).show();
+            Toast.makeText(add_student_from_management_login.this, "Creating User ....", Toast.LENGTH_LONG).show();
 
-        mAuth.createUserWithEmailAndPassword(email_id, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser auth = task.getResult().getUser();
-                            user_add_Uid = auth.getUid();
-                            // Sign in success, update UI with the signed-in user's information
+            mAuth.createUserWithEmailAndPassword(email_id, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                FirebaseUser auth = task.getResult().getUser();
+                                user_add_Uid = auth.getUid();
+                                // Sign in success, update UI with the signed-in user's information
 
-                            myRef.child("Users").child(user_add_Uid).child("Name").setValue(name);
-                            myRef.child("Users").child(user_add_Uid).child("Address").setValue(address);
-                            myRef.child("Users").child(user_add_Uid).child("Phone Number").setValue(phone_number);
-                            myRef.child("Users").child(user_add_Uid).child("Gender").setValue(radioSexButton.getText());
-                            myRef.child("Users").child(user_add_Uid).child("Email Id").setValue(email_id);
-                            myRef.child("Users").child(user_add_Uid).child("Name of the college").setValue(college);
-                            myRef.child("Users").child(user_add_Uid).child("Name of the project").setValue(project_name);
-                            myRef.child("Users").child(user_add_Uid).child("Duration").child("From").setValue(duration_from_date);
-                            myRef.child("Users").child(user_add_Uid).child("Duration").child("To").setValue(duration_to_date);
+                                myRef.child("Users").child(user_add_Uid).child("Name").setValue(name);
+                                myRef.child("Users").child(user_add_Uid).child("Address").setValue(address);
+                                myRef.child("Users").child(user_add_Uid).child("Phone Number").setValue(phone_number);
+                                myRef.child("Users").child(user_add_Uid).child("Gender").setValue(radioSexButton.getText());
+                                myRef.child("Users").child(user_add_Uid).child("Email Id").setValue(email_id);
+                                myRef.child("Users").child(user_add_Uid).child("Name of the college").setValue(college);
+                                myRef.child("Users").child(user_add_Uid).child("Name of the project").setValue(project_name);
+                                myRef.child("Users").child(user_add_Uid).child("Duration").child("From").setValue(duration_from_date);
+                                myRef.child("Users").child(user_add_Uid).child("Duration").child("To").setValue(duration_to_date);
 
-                            new AlertDialog.Builder(
-                                    add_student_from_management_login.this)
-                                    .setTitle(R.string.success)
-                                    .setMessage("Account for "+name+" is created successfully.Under UID : "+user_add_Uid)
-                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            startActivity(new Intent(add_student_from_management_login.this, Management.class));
-                                            finish();
-                                        }
-                                    })
-                                    .show();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(add_student_from_management_login.this, "User not created",
-                                    Toast.LENGTH_SHORT).show();
+                                new AlertDialog.Builder(
+                                        add_student_from_management_login.this)
+                                        .setTitle(R.string.success)
+                                        .setMessage("Account for "+name+" is created successfully.")
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                startActivity(new Intent(add_student_from_management_login.this, Management.class));
+                                                finish();
+                                            }
+                                        })
+                                        .show();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Toast.makeText(add_student_from_management_login.this, "User not created",
+                                        Toast.LENGTH_SHORT).show();
 
+                            }
+
+                            // ...
                         }
+                    });
 
-                        // ...
-                    }
-                });
+
     }
 }

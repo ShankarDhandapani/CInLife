@@ -1,31 +1,36 @@
 package com.cinlife.cingrous.cinlife;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Student extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String user_add_Uid = user.getUid();
+    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
 
 
     @Override
@@ -42,43 +47,8 @@ public class Student extends AppCompatActivity {
             public void onClick(View v) {
                 new IntentIntegrator(Student.this).setCaptureActivity(ScannerActivity.class).initiateScan();
 
-/*                FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
-                    @Override
-                    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                        *//*FirebaseUser user = firebaseAuth.getCurrentUser();
-                         *//**//*if (user != null) {
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                            .setDisplayName("Student").build();
-                    user.updateProfile(profileUpdates);
-                }*//*
-
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                .setDisplayName("Student")
-                                .build();
-
-                        assert user != null;
-                        user.updateProfile(profileUpdates)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(Student.this, "User profile updated.",Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-
-                    }
-                };*/
-
             }
         });
-
-
-
-
-
     }
 
     @Override
@@ -119,23 +89,60 @@ public class Student extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //We will get scan results here
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         //check for null
         if (result != null) {
             if (result.getContents() == null) {
                 Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
             } else {
+
+                Date date = new Date();
+                DateFormat timeFormat = new SimpleDateFormat("h:mm a");
+                DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+                final String formattedTime = timeFormat.format(date.getTime());
+                final String formattedDate = dateFormat.format(date.getTime());
                 //show dialogue with result
-                String result_wanted ;
-                assert user != null;
-                String display_name = user.getUid();
-                result_wanted = "Hi "+display_name+".Data : "+result.getContents();
-                Toast.makeText(this,result_wanted , Toast.LENGTH_LONG).show();
+                if(result.getContents().equals("cingrous_in")){
+                    myRef.child("User Log").child(formattedDate).child(user_add_Uid).child("In Time").setValue(formattedTime);
+
+                    AlertDialog alertDialog = new AlertDialog.Builder(
+                            Student.this)
+                            .setTitle(R.string.welcome)
+                            .setMessage("Welcome to Cingrous Labs.Time : "+formattedTime)
+                            .setPositiveButton("Done",null)
+                            .show();
+
+                }
+                if(result.getContents().equals("cingrous_out")){
+                    LayoutInflater inflater = getLayoutInflater();
+                    @SuppressLint("InflateParams") final View customView = inflater.inflate(R.layout.todays_task_activity, null);
+                    final ViewGroup parent = (ViewGroup) customView.getParent();
+                    final TextInputEditText activity_content = customView.findViewById(R.id.today_s_activity_content_at_out_qr_code_found);
+
+                    AlertDialog.Builder alert = new AlertDialog.Builder(Student.this);
+                    alert.setView(customView);
+                    alert.setCancelable(true);
+                    final AlertDialog dialog = alert.create();
+                    dialog.show();
+
+                    customView.findViewById(R.id.today_s_activity_submit_button_at_out_qr_code_found).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            myRef.child("User Log").child(formattedDate).child(user_add_Uid).child("Out Time").setValue(formattedTime);
+                            myRef.child("User Log").child(formattedDate).child(user_add_Uid).child("Activity").setValue(activity_content.getText().toString().trim());
+                            Toast.makeText(Student.this,"Your Entry submitted successfully.",Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    });
+
+                }
             }
         } else {
             // This is important, otherwise the result will not be passed to the fragment
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+
 
 }

@@ -36,4 +36,7 @@
     <string name="college">College</string>
     <string name="name_of_the_project">Name of the Project</string>
     <string name="addUserTitle">Add User</string>
+    <string name="submit">Submit</string>
+    <string name="today_s_activity">Today\'s Activity</string>
+    <string name="welcome">Welcome</string>
 </resources>
