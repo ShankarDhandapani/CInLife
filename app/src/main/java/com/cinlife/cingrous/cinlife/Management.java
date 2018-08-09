@@ -74,7 +74,7 @@ public class Management extends AppCompatActivity {
                 startActivity(new Intent(Management.this,add_student_from_management_login.class));
                 return true;
             case R.id.profile_from_management_dash:
-                db.collection("Users").document(mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                db.collection(mAuth.getUid()).document("profile").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Model_class model_class = documentSnapshot.toObject(Model_class.class);

@@ -1,17 +1,19 @@
 package com.cinlife.cingrous.cinlife;
 //balanirmal@kgisl.com
 
+import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,19 +37,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
 
 public class add_student_from_management_login extends AppCompatActivity {
 
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 100;
     private static Bitmap bitmap;
 
     private int from_mYear, from_mMonth, from_mDay, to_mYear, to_mMonth, to_mDay;
     TextView date_from, date_to;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
     FirebaseAuth mAuth;
     TextInputEditText new_user_name,new_user_address,new_user_phone_number,new_user_email,new_user_password,
             new_user_confirm_password,college_name,name_of_the_project;
@@ -58,6 +59,7 @@ public class add_student_from_management_login extends AppCompatActivity {
     RadioGroup gender;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private Context context;
 
 
     @Override
@@ -169,7 +171,7 @@ public class add_student_from_management_login extends AppCompatActivity {
         gender = findViewById(R.id.gender_at_add_student);
         int selectedId = gender.getCheckedRadioButtonId();
         final RadioButton radioSexButton = findViewById(selectedId);
-        final DatabaseReference myRef = database.getReference();
+
 
         name = new_user_name.getText().toString().trim();
         address = new_user_address.getText().toString().trim();
@@ -201,7 +203,7 @@ public class add_student_from_management_login extends AppCompatActivity {
                                 Model_class model_class = new Model_class(address, duration_from_date, duration_to_date
                                         ,email_id, radioSexButton.getText().toString(), name, college, project_name, phone_number);
 
-                                db.collection("Users").document(user_add_Uid).set(model_class).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                db.collection(user_add_Uid).document("profile").set(model_class).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
 
@@ -241,10 +243,26 @@ public class add_student_from_management_login extends AppCompatActivity {
 
 
     public void open_camera(View view) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    MY_PERMISSIONS_REQUEST_CAMERA);
+
+        }else{
+
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+
         }
+
+
+
     }
 
     @Override
@@ -253,7 +271,7 @@ public class add_student_from_management_login extends AppCompatActivity {
             Bundle extras = data.getExtras();
             assert extras != null;
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            ImageView mImageView = findViewById(R.id.student_photo_at_add_worker_tab_in_manager_login);
+            ImageButton mImageView = findViewById(R.id.student_photo_at_add_worker_tab_in_manager_login);
             mImageView.setImageBitmap(imageBitmap);
         }
     }
