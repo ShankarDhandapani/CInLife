@@ -76,11 +76,13 @@ public class LoginActivity extends AppCompatActivity {
         if (Uid.equals("1HeXJ0snBoW1kfuKOUsKr5OnTQD3")){
             Intent intent1 = new Intent(LoginActivity.this, Management.class);
             startActivity(intent1);
+            finish();
             Toast.makeText(LoginActivity.this, "Management Login", Toast.LENGTH_LONG).show();
         }
         else {
             Intent intent2 = new Intent(LoginActivity.this, Student.class);
             startActivity(intent2);
+            finish();
             //Toast.makeText(LoginActivity.this, "Student Login", Toast.LENGTH_LONG).show();
         }
         finish();

@@ -10,9 +10,15 @@
         android:title="@string/logout" />
     <item
         android:icon="@drawable/ic_add_circle_outline_black_24dp"
-        android:orderInCategory="90"
+        android:orderInCategory="80"
         app:showAsAction="always"
         android:id="@+id/add_student"
         android:title="@string/add_student" />
+    <item
+        android:icon="@drawable/ic_account_box_black_24dp"
+        app:showAsAction="always"
+        android:orderInCategory="90"
+        android:id="@+id/profile_from_management_dash"
+        android:title="@string/profile" />
 
 </menu>

@@ -1,36 +1,49 @@
 package com.cinlife.cingrous.cinlife;
-
+//balanirmal@kgisl.com
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cinlife.cingrous.cinlife.model.Model_class;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.Calendar;
 
 public class add_student_from_management_login extends AppCompatActivity {
+
+    private static Bitmap bitmap;
 
     private int from_mYear, from_mMonth, from_mDay, to_mYear, to_mMonth, to_mDay;
     TextView date_from, date_to;
@@ -40,8 +53,11 @@ public class add_student_from_management_login extends AppCompatActivity {
             new_user_confirm_password,college_name,name_of_the_project;
     String name,address,phone_number,email_id,password,confirm_password,duration_from_date,duration_to_date,college,project_name, user_add_Uid;
     TextView new_user_duration_from_date,new_user_duration_to_date;
+    TextInputLayout new_user_confirm_passeord_layout;
 
     RadioGroup gender;
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
 
     @Override
@@ -55,6 +71,7 @@ public class add_student_from_management_login extends AppCompatActivity {
         date_from = findViewById(R.id.date_from_from_add_details);
         date_to = findViewById(R.id.date_to_from_add_details);
 
+        new_user_confirm_passeord_layout = findViewById(R.id.confirm_password_of_the_new_user_layout);
         new_user_name = findViewById(R.id.name_of_the_student_yet_to_be_created);
         new_user_address = findViewById(R.id.address_of_the_new_student);
         new_user_phone_number = findViewById(R.id.phone_number_of_the_new_user);
@@ -65,7 +82,6 @@ public class add_student_from_management_login extends AppCompatActivity {
         new_user_duration_to_date = findViewById(R.id.date_to_from_add_details);
         college_name = findViewById(R.id.college_of_the_student_yet_to_be_created);
         name_of_the_project = findViewById(R.id.name_of_the_project_of_the_student_yet_to_be_created);
-
     }
 
     public void from_date_selector(View view) {
@@ -151,15 +167,8 @@ public class add_student_from_management_login extends AppCompatActivity {
     public void create_user_account(View view) {
 
         gender = findViewById(R.id.gender_at_add_student);
-
-        // get selected radio button from radioGroup
         int selectedId = gender.getCheckedRadioButtonId();
-        // find the radiobutton by returned id
         final RadioButton radioSexButton = findViewById(selectedId);
-
-
-        Toast.makeText(add_student_from_management_login.this, "Gender : "+gender,Toast.LENGTH_LONG).show();
-
         final DatabaseReference myRef = database.getReference();
 
         name = new_user_name.getText().toString().trim();
@@ -173,6 +182,10 @@ public class add_student_from_management_login extends AppCompatActivity {
         college = college_name.getText().toString().trim();
         project_name = name_of_the_project.getText().toString().trim();
 
+
+
+        if(password.equals(confirm_password)){
+
             Toast.makeText(add_student_from_management_login.this, "Creating User ....", Toast.LENGTH_LONG).show();
 
             mAuth.createUserWithEmailAndPassword(email_id, password)
@@ -181,31 +194,34 @@ public class add_student_from_management_login extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 FirebaseUser auth = task.getResult().getUser();
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 user_add_Uid = auth.getUid();
                                 // Sign in success, update UI with the signed-in user's information
 
-                                myRef.child("Users").child(user_add_Uid).child("Name").setValue(name);
-                                myRef.child("Users").child(user_add_Uid).child("Address").setValue(address);
-                                myRef.child("Users").child(user_add_Uid).child("Phone Number").setValue(phone_number);
-                                myRef.child("Users").child(user_add_Uid).child("Gender").setValue(radioSexButton.getText());
-                                myRef.child("Users").child(user_add_Uid).child("Email Id").setValue(email_id);
-                                myRef.child("Users").child(user_add_Uid).child("Name of the college").setValue(college);
-                                myRef.child("Users").child(user_add_Uid).child("Name of the project").setValue(project_name);
-                                myRef.child("Users").child(user_add_Uid).child("Duration").child("From").setValue(duration_from_date);
-                                myRef.child("Users").child(user_add_Uid).child("Duration").child("To").setValue(duration_to_date);
+                                Model_class model_class = new Model_class(address, duration_from_date, duration_to_date
+                                        ,email_id, radioSexButton.getText().toString(), name, college, project_name, phone_number);
 
-                                new AlertDialog.Builder(
-                                        add_student_from_management_login.this)
-                                        .setTitle(R.string.success)
-                                        .setMessage("Account for "+name+" is created successfully.")
-                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                startActivity(new Intent(add_student_from_management_login.this, Management.class));
-                                                finish();
-                                            }
-                                        })
-                                        .show();
+                                db.collection("Users").document(user_add_Uid).set(model_class).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                        new AlertDialog.Builder(
+                                                add_student_from_management_login.this)
+                                                .setTitle(R.string.success)
+                                                .setMessage("Account for "+name+" is created successfully.")
+                                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        startActivity(new Intent(add_student_from_management_login.this, Management.class));
+                                                        finish();
+                                                    }
+                                                })
+                                                .show();
+
+                                    }
+                                });
+
+
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(add_student_from_management_login.this, "User not created",
@@ -217,6 +233,30 @@ public class add_student_from_management_login extends AppCompatActivity {
                         }
                     });
 
+        }else {
+            new_user_confirm_passeord_layout.setError("Password does not match");
 
+        }
     }
+
+
+    public void open_camera(View view) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            assert extras != null;
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            ImageView mImageView = findViewById(R.id.student_photo_at_add_worker_tab_in_manager_login);
+            mImageView.setImageBitmap(imageBitmap);
+        }
+    }
+
+
 }
