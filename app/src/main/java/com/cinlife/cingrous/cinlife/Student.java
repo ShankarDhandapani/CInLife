@@ -1,25 +1,29 @@
 package com.cinlife.cingrous.cinlife;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cinlife.cingrous.cinlife.model.Model_class;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,14 +31,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
-public class Student extends AppCompatActivity {
+public class Student extends AppCompatActivity{
 
     private FirebaseAuth mAuth;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -74,28 +82,28 @@ public class Student extends AppCompatActivity {
                 logout();
                 return true;
             case R.id.profile_from_worker_dash:
-
-                db.collection("User Profile").document(mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                Task<DocumentSnapshot> documentSnapshotTask = db.collection("User Profile").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Model_class model_class = documentSnapshot.toObject(Model_class.class);
-                        if(model_class != null){
-                            view_profile(model_class);
-                        }else {
-                            AlertDialog alertDialog = new AlertDialog.Builder(
-                                    Student.this)
-                                    .setMessage("Something Went Wrong !!!")
-                                    .setPositiveButton("OK",null)
-                                    .show();
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                //  System.out.println("DocumentSnapshot data: " + document.getData());
+                               /* Map<String, Object> model_class = document.getData();
+                                Log.d("OUTPUT", (String) model_class.get("name"));*/
+                                Model_class model_class = new Model_class(document.getData());
+                                view_profile(model_class);
+                            }
                         }
                     }
                 });
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 
     private void view_profile(Model_class model_class) {
 
@@ -104,15 +112,19 @@ public class Student extends AppCompatActivity {
         final ViewGroup parent = (ViewGroup) customView.getParent();
         //final TextInputEditText activity_content = customView.findViewById(R.id.today_s_activity_content_at_out_qr_code_found);
 
+        ImageView profilePictureDisplay = (ImageView) customView.findViewById(R.id.user_profile_picture_at_student_or_management_login);
+
+        Picasso.with(this)
+                .load(model_class.getProfilePicture())
+                .transform(new CircleTransform())
+                .into(profilePictureDisplay);
+
         AlertDialog.Builder alert = new AlertDialog.Builder(Student.this);
         alert.setView(customView);
         alert.setCancelable(true);
         final AlertDialog dialog = alert.create();
         dialog.show();
 
-        ImageView profilePictureDisplay = findViewById(R.id.user_profile_picture_at_student_or_management_login);
-        Uri profilePictureUri = Uri.parse(model_class.getProfilePicture());
-        Picasso.get().load(profilePictureUri).into(profilePictureDisplay);
         TextView addressDisplay = customView.findViewById(R.id.address_of_the_current_user);
         addressDisplay.setText(model_class.getAddress());
         TextView fromDurationDisplay = customView.findViewById(R.id.from_date_of_the_current_user);
@@ -215,7 +227,4 @@ public class Student extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
-
-
-
 }

@@ -4,13 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,14 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cinlife.cingrous.cinlife.model.Model_class;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,9 +26,6 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
-
-import java.util.Map;
-import java.util.Objects;
 
 public class Management extends AppCompatActivity {
 
@@ -82,22 +72,6 @@ public class Management extends AppCompatActivity {
                 startActivity(new Intent(Management.this,add_student_from_management_login.class));
                 return true;
             case R.id.profile_from_management_dash:
-               /* db.collection("User Profile").document(mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Model_class model_class = documentSnapshot.toObject(Model_class.class);
-                        if(model_class != null){
-                            view_profile(model_class);
-                        }else {
-                            AlertDialog alertDialog = new AlertDialog.Builder(
-                                    Management.this)
-                                    .setMessage("Something Went Wrong !!!")
-                                    .setPositiveButton("OK",null)
-                                    .show();
-                        }
-                    }
-                });*/
-
                 Task<DocumentSnapshot> documentSnapshotTask = db.collection("User Profile").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -126,17 +100,19 @@ public class Management extends AppCompatActivity {
         final ViewGroup parent = (ViewGroup) customView.getParent();
         //final TextInputEditText activity_content = customView.findViewById(R.id.today_s_activity_content_at_out_qr_code_found);
 
+        ImageView profilePictureDisplay = (ImageView) customView.findViewById(R.id.user_profile_picture_at_student_or_management_login);
+
+        Picasso.with(this)
+                .load(model_class.getProfilePicture())
+                .transform(new CircleTransform())
+                .into(profilePictureDisplay);
+
         AlertDialog.Builder alert = new AlertDialog.Builder(Management.this);
         alert.setView(customView);
         alert.setCancelable(true);
         final AlertDialog dialog = alert.create();
         dialog.show();
 
-        ImageView profilePictureDisplay = findViewById(R.id.user_profile_picture_at_student_or_management_login);
-        Uri profilePictureUri = Uri.parse(model_class.getProfilePicture());
-        //Picasso.get().load(model_class.getProfilePicture()).into(profilePictureDisplay);
-        //Picasso.get().load("http://cdn.shopify.com/s/files/1/1482/3564/products/hello_grande.jpg").into(profilePictureDisplay);
-        //profilePictureDisplay.setImageURI(Uri.parse("http://cdn.shopify.com/s/files/1/1482/3564/products/hello_grande.jpg"));
         TextView addressDisplay = customView.findViewById(R.id.address_of_the_current_user);
         addressDisplay.setText(model_class.getAddress());
         TextView fromDurationDisplay = customView.findViewById(R.id.from_date_of_the_current_user);
