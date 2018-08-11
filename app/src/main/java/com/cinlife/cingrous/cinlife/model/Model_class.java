@@ -1,14 +1,24 @@
 package com.cinlife.cingrous.cinlife.model;
 
+import android.net.Uri;
+
+import java.util.Map;
+
 public class Model_class {
-    private  String address, from_duration, to_duration
-            ,email, gender, name, college, project, phone;
+    private  String address;
+    private String from_duration;
+    private String to_duration;
+    private String email;
+    private String gender;
+    private String name;
+    private String college;
+    private String project;
+    private String phone;
+    private String profilePicture;
 
-
-    public Model_class() {
-    }
-
-    public Model_class(String address, String from_duration, String to_duration, String email, String gender, String name, String college, String project, String phone) {
+    public Model_class(String address, String from_duration, String to_duration, String email,
+                       String gender, String name, String college, String project, String phone,
+                       String profilePicture) {
         this.address = address;
         this.from_duration = from_duration;
         this.to_duration = to_duration;
@@ -18,6 +28,20 @@ public class Model_class {
         this.college = college;
         this.project = project;
         this.phone = phone;
+        this.profilePicture = profilePicture;
+    }
+
+    public Model_class(Map<String, Object> data) {
+        this.address = (String) data.get("address");
+        this.from_duration = (String) data.get("from_duration");
+        this.to_duration = (String) data.get("to_duration");
+        this.email = (String) data.get("email");
+        this.gender = (String) data.get("gender");
+        this.name = (String) data.get("name");
+        this.college = (String) data.get("college");
+        this.project = (String) data.get("project");
+        this.phone = (String) data.get("phone");
+        this.profilePicture = (String) data.get("profilePicture");
     }
 
     public String getAddress() {
@@ -90,5 +114,13 @@ public class Model_class {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }

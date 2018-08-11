@@ -3,6 +3,7 @@ package com.cinlife.cingrous.cinlife;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -72,7 +75,7 @@ public class Student extends AppCompatActivity {
                 return true;
             case R.id.profile_from_worker_dash:
 
-                db.collection(mAuth.getUid()).document("profile").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                db.collection("User Profile").document(mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Model_class model_class = documentSnapshot.toObject(Model_class.class);
@@ -107,6 +110,9 @@ public class Student extends AppCompatActivity {
         final AlertDialog dialog = alert.create();
         dialog.show();
 
+        ImageView profilePictureDisplay = findViewById(R.id.user_profile_picture_at_student_or_management_login);
+        Uri profilePictureUri = Uri.parse(model_class.getProfilePicture());
+        Picasso.get().load(profilePictureUri).into(profilePictureDisplay);
         TextView addressDisplay = customView.findViewById(R.id.address_of_the_current_user);
         addressDisplay.setText(model_class.getAddress());
         TextView fromDurationDisplay = customView.findViewById(R.id.from_date_of_the_current_user);
@@ -156,8 +162,8 @@ public class Student extends AppCompatActivity {
             } else {
 
                 Date date = new Date();
-                DateFormat timeFormat = new SimpleDateFormat("h:mm a");
-                DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+                @SuppressLint("SimpleDateFormat") DateFormat timeFormat = new SimpleDateFormat("h:mm a");
+                @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
                 final String formattedTime = timeFormat.format(date.getTime());
                 final String formattedDate = dateFormat.format(date.getTime());
                 //show dialogue with result
@@ -165,8 +171,7 @@ public class Student extends AppCompatActivity {
                    // myRef.child("User Log").child(formattedDate).child(user_add_Uid).child("In Time").setValue(formattedTime);
                     Map<String, Object> user = new HashMap<>();
                     user.put("in_time", formattedTime);
-                    db.collection(user_add_Uid).document("user_log").collection(formattedDate).document("in").set(user);
-
+                    db.collection("User Log").document(mAuth.getUid()).set(user);
                     AlertDialog alertDialog = new AlertDialog.Builder(
                             Student.this)
                             .setTitle(R.string.welcome)
@@ -196,7 +201,7 @@ public class Student extends AppCompatActivity {
                             Map<String, Object> user = new HashMap<>();
                             user.put("out_time", formattedTime);
                             user.put("activity",activity_done);
-                            db.collection(user_add_Uid).document("user_log").collection(formattedDate).document("out").set(user);
+                            db.collection("User Log").document(mAuth.getUid()).set(user);
 
                             Toast.makeText(Student.this,"Your Entry submitted successfully.",Toast.LENGTH_SHORT).show();
                             dialog.dismiss();

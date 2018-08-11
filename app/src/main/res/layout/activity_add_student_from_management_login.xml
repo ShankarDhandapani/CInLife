@@ -6,14 +6,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="10dp">
 
-        <ImageButton
-            android:background="@color/colorPrimaryText"
-            android:id="@+id/student_photo_at_add_worker_tab_in_manager_login"
-            android:src="@drawable/ic_account_box_black_24dp"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:onClick="open_camera"
-            android:contentDescription="@string/capture_students_image" />
+    <ImageButton
+        android:id="@+id/student_photo_at_add_worker_tab_in_manager_login"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimaryText"
+        android:contentDescription="@string/capture_students_image"
+        android:foregroundGravity="center"
+        android:onClick="open_camera"
+        android:src="@drawable/ic_account_box_black_24dp" />
 
     <ScrollView
         android:layout_width="match_parent"

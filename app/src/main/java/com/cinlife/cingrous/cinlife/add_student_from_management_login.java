@@ -1,13 +1,16 @@
 package com.cinlife.cingrous.cinlife;
-//balanirmal@kgisl.com
+
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -16,15 +19,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -32,22 +32,28 @@ import android.widget.Toast;
 
 import com.cinlife.cingrous.cinlife.model.Model_class;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 
 public class add_student_from_management_login extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 100;
-    private static Bitmap bitmap;
 
     private int from_mYear, from_mMonth, from_mDay, to_mYear, to_mMonth, to_mDay;
     TextView date_from, date_to;
+
+
 
     FirebaseAuth mAuth;
     TextInputEditText new_user_name,new_user_address,new_user_phone_number,new_user_email,new_user_password,
@@ -55,23 +61,30 @@ public class add_student_from_management_login extends AppCompatActivity {
     String name,address,phone_number,email_id,password,confirm_password,duration_from_date,duration_to_date,college,project_name, user_add_Uid;
     TextView new_user_duration_from_date,new_user_duration_to_date;
     TextInputLayout new_user_confirm_passeord_layout;
+    ImageButton mImageView;
+
+    private StorageReference mStorageRef;
 
     RadioGroup gender;
+    Bitmap imageBitmap;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    private Context context;
 
 
+    @SuppressLint("CutPasteId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_student_from_management_login);
         setTitle(getString(R.string.addUserTitle));
 
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
         mAuth = FirebaseAuth.getInstance();
 
         date_from = findViewById(R.id.date_from_from_add_details);
         date_to = findViewById(R.id.date_to_from_add_details);
+        mImageView = findViewById(R.id.student_photo_at_add_worker_tab_in_manager_login);
 
         new_user_confirm_passeord_layout = findViewById(R.id.confirm_password_of_the_new_user_layout);
         new_user_name = findViewById(R.id.name_of_the_student_yet_to_be_created);
@@ -188,42 +201,71 @@ public class add_student_from_management_login extends AppCompatActivity {
 
         if(password.equals(confirm_password)){
 
-            Toast.makeText(add_student_from_management_login.this, "Creating User ....", Toast.LENGTH_LONG).show();
-
             mAuth.createUserWithEmailAndPassword(email_id, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+
+                                Toast.makeText(add_student_from_management_login.this, "Creating User ....", Toast.LENGTH_SHORT).show();
+
                                 FirebaseUser auth = task.getResult().getUser();
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                final FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 user_add_Uid = auth.getUid();
                                 // Sign in success, update UI with the signed-in user's information
 
-                                Model_class model_class = new Model_class(address, duration_from_date, duration_to_date
-                                        ,email_id, radioSexButton.getText().toString(), name, college, project_name, phone_number);
-
-                                db.collection(user_add_Uid).document("profile").set(model_class).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                final StorageReference mountainImagesRef = mStorageRef.child("Profile Picture/"+user_add_Uid+".jpg");
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+                                byte[] data = baos.toByteArray();
+                                UploadTask uploadTask = mountainImagesRef.putBytes(data);
+                                uploadTask.addOnFailureListener(new OnFailureListener() {
                                     @Override
-                                    public void onSuccess(Void aVoid) {
-
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle unsuccessful uploads
                                         new AlertDialog.Builder(
                                                 add_student_from_management_login.this)
-                                                .setTitle(R.string.success)
-                                                .setMessage("Account for "+name+" is created successfully.")
-                                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        startActivity(new Intent(add_student_from_management_login.this, Management.class));
-                                                        finish();
-                                                    }
-                                                })
+                                                .setMessage("Error in uploading Image.")
+                                                .setNegativeButton("OK",null)
                                                 .show();
 
                                     }
+                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                        mountainImagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+
+                                                String Url = uri.toString().trim();
+
+                                                Model_class  model_class = new Model_class(address, duration_from_date, duration_to_date
+                                                        ,email_id, radioSexButton.getText().toString(), name, college, project_name, phone_number,Url);
+
+                                                db.collection("User Profile").document(user_add_Uid).set(model_class).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+
+                                                        new AlertDialog.Builder(
+                                                                add_student_from_management_login.this)
+                                                                .setTitle(R.string.success)
+                                                                .setMessage("Account for "+name+" is created successfully.")
+                                                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                        startActivity(new Intent(add_student_from_management_login.this, Management.class));
+                                                                        finish();
+                                                                    }
+                                                                })
+                                                                .show();
+                                                    }
+                                                });
+
+                                            }
+                                        });
+                                    }
                                 });
-
-
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(add_student_from_management_login.this, "User not created",
@@ -270,8 +312,7 @@ public class add_student_from_management_login extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             assert extras != null;
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            ImageButton mImageView = findViewById(R.id.student_photo_at_add_worker_tab_in_manager_login);
+            imageBitmap = (Bitmap) extras.get("data");
             mImageView.setImageBitmap(imageBitmap);
         }
     }
