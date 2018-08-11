@@ -52,7 +52,6 @@ public class Student extends AppCompatActivity{
 
         mAuth = FirebaseAuth.getInstance();
 
-
         findViewById(R.id.float_btn_qr_scan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,7 +100,6 @@ public class Student extends AppCompatActivity{
         LayoutInflater inflater = getLayoutInflater();
         @SuppressLint("InflateParams") final View customView = inflater.inflate(R.layout.activity_profile_view,null);
         final ViewGroup parent = (ViewGroup) customView.getParent();
-        //final TextInputEditText activity_content = customView.findViewById(R.id.today_s_activity_content_at_out_qr_code_found);
 
         ImageView profilePictureDisplay = (ImageView) customView.findViewById(R.id.user_profile_picture_at_student_or_management_login);
 
@@ -172,7 +170,6 @@ public class Student extends AppCompatActivity{
                 //show dialogue with result
                 final Map<String, Object> user = new HashMap<>();
                 if(result.getContents().equals("cingrous_in")){
-                   // myRef.child("User Log").child(formattedDate).child(user_add_Uid).child("In Time").setValue(formattedTime);
 
                     user.put("in_time", formattedTime);
                     db.collection("User Log").document(mAuth.getUid()).collection(formattedDate).document("in").set(user);
@@ -201,8 +198,6 @@ public class Student extends AppCompatActivity{
                     submit_btn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            // myRef.child("User Log").child(formattedDate).child(user_add_Uid).child("Out Time").setValue(formattedTime);
-                            //myRef.child("User Log").child(formattedDate).child(user_add_Uid).child("Activity").setValue(activity_content.getText().toString().trim());
 
                             if(activity_content.length() > 10){
                                 String activity_done = activity_content.getText().toString().trim();
@@ -215,10 +210,6 @@ public class Student extends AppCompatActivity{
                             }else {
                                 activity_content.setError("This field should contain minimum of 10 characters");
                             }
-
-
-
-
                         }
                     });
 

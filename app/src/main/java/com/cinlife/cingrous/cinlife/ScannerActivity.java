@@ -49,7 +49,6 @@ public class ScannerActivity extends AppCompatActivity implements DecoratedBarco
         capture.initializeFromIntent(getIntent(), savedInstanceState);
         capture.decode();
 
-
     }
 
     private boolean hasFlash() {
@@ -67,7 +66,6 @@ public class ScannerActivity extends AppCompatActivity implements DecoratedBarco
         }
 
     }
-
 
     @Override
     protected void onResume() {

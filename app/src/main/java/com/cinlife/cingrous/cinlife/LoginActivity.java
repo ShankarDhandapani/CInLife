@@ -30,8 +30,6 @@ public class LoginActivity extends AppCompatActivity {
         email_from_login = findViewById(R.id.et_email_from_login);
         password_from_login = findViewById(R.id.et_pass_from_login);
 
-
-
         findViewById(R.id.btn_login_from_login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,15 +51,12 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
 
-
-
                 }else {
                     Toast.makeText(LoginActivity.this, "Email and Password can't be empty", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
-
 
     @Override
     protected void onStart() {
@@ -83,7 +78,6 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent2 = new Intent(LoginActivity.this, Student.class);
             startActivity(intent2);
             finish();
-            //Toast.makeText(LoginActivity.this, "Student Login", Toast.LENGTH_LONG).show();
         }
         finish();
     }
