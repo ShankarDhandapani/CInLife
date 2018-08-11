@@ -1,7 +1,6 @@
 package com.cinlife.cingrous.cinlife;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,14 +14,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cinlife.cingrous.cinlife.model.Model_class;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,16 +29,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class Student extends AppCompatActivity{
 
@@ -88,9 +82,6 @@ public class Student extends AppCompatActivity{
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                //  System.out.println("DocumentSnapshot data: " + document.getData());
-                               /* Map<String, Object> model_class = document.getData();
-                                Log.d("OUTPUT", (String) model_class.get("name"));*/
                                 Model_class model_class = new Model_class(document.getData());
                                 view_profile(model_class);
                             }
@@ -179,11 +170,13 @@ public class Student extends AppCompatActivity{
                 final String formattedTime = timeFormat.format(date.getTime());
                 final String formattedDate = dateFormat.format(date.getTime());
                 //show dialogue with result
+                final Map<String, Object> user = new HashMap<>();
                 if(result.getContents().equals("cingrous_in")){
                    // myRef.child("User Log").child(formattedDate).child(user_add_Uid).child("In Time").setValue(formattedTime);
-                    Map<String, Object> user = new HashMap<>();
+
                     user.put("in_time", formattedTime);
-                    db.collection("User Log").document(mAuth.getUid()).set(user);
+                    db.collection("User Log").document(mAuth.getUid()).collection(formattedDate).document("in").set(user);
+
                     AlertDialog alertDialog = new AlertDialog.Builder(
                             Student.this)
                             .setTitle(R.string.welcome)
@@ -197,26 +190,35 @@ public class Student extends AppCompatActivity{
                     @SuppressLint("InflateParams") final View customView = inflater.inflate(R.layout.todays_task_activity, null);
                     final ViewGroup parent = (ViewGroup) customView.getParent();
                     final TextInputEditText activity_content = customView.findViewById(R.id.today_s_activity_content_at_out_qr_code_found);
+                    Button submit_btn = customView.findViewById(R.id.today_s_activity_submit_button_at_out_qr_code_found);
 
                     AlertDialog.Builder alert = new AlertDialog.Builder(Student.this);
                     alert.setView(customView);
-                    alert.setCancelable(true);
+                    alert.setCancelable(false);
                     final AlertDialog dialog = alert.create();
                     dialog.show();
 
-                    customView.findViewById(R.id.today_s_activity_submit_button_at_out_qr_code_found).setOnClickListener(new View.OnClickListener() {
+                    submit_btn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                           // myRef.child("User Log").child(formattedDate).child(user_add_Uid).child("Out Time").setValue(formattedTime);
+                            // myRef.child("User Log").child(formattedDate).child(user_add_Uid).child("Out Time").setValue(formattedTime);
                             //myRef.child("User Log").child(formattedDate).child(user_add_Uid).child("Activity").setValue(activity_content.getText().toString().trim());
-                            String activity_done = activity_content.getText().toString().trim();
-                            Map<String, Object> user = new HashMap<>();
-                            user.put("out_time", formattedTime);
-                            user.put("activity",activity_done);
-                            db.collection("User Log").document(mAuth.getUid()).set(user);
 
-                            Toast.makeText(Student.this,"Your Entry submitted successfully.",Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
+                            if(activity_content.length() > 10){
+                                String activity_done = activity_content.getText().toString().trim();
+                                user.put("out_time", formattedTime);
+                                user.put("activity", activity_done);
+                                db.collection("User Log").document(mAuth.getUid()).collection(formattedDate).document("out").set(user);
+
+                                Toast.makeText(Student.this,"Your Entry submitted successfully.",Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }else {
+                                activity_content.setError("This field should contain minimum of 10 characters");
+                            }
+
+
+
+
                         }
                     });
 

@@ -78,9 +78,6 @@ public class Management extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                //  System.out.println("DocumentSnapshot data: " + document.getData());
-                               /* Map<String, Object> model_class = document.getData();
-                                Log.d("OUTPUT", (String) model_class.get("name"));*/
                                 Model_class model_class = new Model_class(document.getData());
                                 view_profile(model_class);
                             }
@@ -98,7 +95,6 @@ public class Management extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         @SuppressLint("InflateParams") final View customView = inflater.inflate(R.layout.activity_profile_view,null);
         final ViewGroup parent = (ViewGroup) customView.getParent();
-        //final TextInputEditText activity_content = customView.findViewById(R.id.today_s_activity_content_at_out_qr_code_found);
 
         ImageView profilePictureDisplay = (ImageView) customView.findViewById(R.id.user_profile_picture_at_student_or_management_login);
 
