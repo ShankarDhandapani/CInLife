@@ -136,7 +136,7 @@ public class Management extends AppCompatActivity {
         Uri profilePictureUri = Uri.parse(model_class.getProfilePicture());
         //Picasso.get().load(model_class.getProfilePicture()).into(profilePictureDisplay);
         //Picasso.get().load("http://cdn.shopify.com/s/files/1/1482/3564/products/hello_grande.jpg").into(profilePictureDisplay);
-        profilePictureDisplay.setImageURI(Uri.parse("http://cdn.shopify.com/s/files/1/1482/3564/products/hello_grande.jpg"));
+        //profilePictureDisplay.setImageURI(Uri.parse("http://cdn.shopify.com/s/files/1/1482/3564/products/hello_grande.jpg"));
         TextView addressDisplay = customView.findViewById(R.id.address_of_the_current_user);
         addressDisplay.setText(model_class.getAddress());
         TextView fromDurationDisplay = customView.findViewById(R.id.from_date_of_the_current_user);
