@@ -75,7 +75,7 @@ public class Student extends AppCompatActivity{
                 logout();
                 return true;
             case R.id.profile_from_worker_dash:
-                Task<DocumentSnapshot> documentSnapshotTask = db.collection("User Profile").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                Task<DocumentSnapshot> documentSnapshotTask = db.collection("Users").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
@@ -124,6 +124,8 @@ public class Student extends AppCompatActivity{
         emailDisplay.setText(model_class.getEmail());
         TextView genderDisplay = customView.findViewById(R.id.gender_of_the_current_user);
         genderDisplay.setText(model_class.getGender());
+        TextView workerTypeDisplay = customView.findViewById(R.id.worker_type_of_the_current_user);
+        workerTypeDisplay.setText(model_class.getWorker_type());
         TextView nameDisplay = customView.findViewById(R.id.Name_of_the_current_user);
         nameDisplay.setText(model_class.getName());
         TextView collegeDisplay = customView.findViewById(R.id.name_of_the_college_of_the_current_user);
@@ -172,12 +174,11 @@ public class Student extends AppCompatActivity{
                 if(result.getContents().equals("cingrous_in")){
 
                     user.put("in_time", formattedTime);
-                    db.collection("User Log").document(mAuth.getUid()).collection(formattedDate).document("in").set(user);
+                    db.collection("Users").document(mAuth.getUid()).collection("User Log").document(formattedDate).set(user);
 
                     AlertDialog alertDialog = new AlertDialog.Builder(
                             Student.this)
-                            .setTitle(R.string.welcome)
-                            .setMessage("Welcome to Cingrous Labs.Time : "+formattedTime)
+                            .setMessage("In Time : "+formattedTime)
                             .setPositiveButton("Done",null)
                             .show();
 
@@ -203,9 +204,12 @@ public class Student extends AppCompatActivity{
                                 String activity_done = activity_content.getText().toString().trim();
                                 user.put("out_time", formattedTime);
                                 user.put("activity", activity_done);
-                                db.collection("User Log").document(mAuth.getUid()).collection(formattedDate).document("out").set(user);
-
-                                Toast.makeText(Student.this,"Your Entry submitted successfully.",Toast.LENGTH_SHORT).show();
+                                db.collection("Users").document(mAuth.getUid()).collection("User Log").document(formattedDate).update(user);
+                                new AlertDialog.Builder(
+                                        Student.this)
+                                        .setMessage("Out Time : "+formattedTime+"\n Activity : "+activity_done)
+                                        .setPositiveButton("Done",null)
+                                        .show();
                                 dialog.dismiss();
                             }else {
                                 activity_content.setError("This field should contain minimum of 10 characters");

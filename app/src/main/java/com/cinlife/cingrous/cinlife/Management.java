@@ -71,7 +71,7 @@ public class Management extends AppCompatActivity {
                 startActivity(new Intent(Management.this,add_student_from_management_login.class));
                 return true;
             case R.id.profile_from_management_dash:
-                Task<DocumentSnapshot> documentSnapshotTask = db.collection("User Profile").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                Task<DocumentSnapshot> documentSnapshotTask = db.collection("Users").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
@@ -118,6 +118,8 @@ public class Management extends AppCompatActivity {
         emailDisplay.setText(model_class.getEmail());
         TextView genderDisplay = customView.findViewById(R.id.gender_of_the_current_user);
         genderDisplay.setText(model_class.getGender());
+        TextView workerTypeDisplay = customView.findViewById(R.id.worker_type_of_the_current_user);
+        workerTypeDisplay.setText(model_class.getWorker_type());
         TextView nameDisplay = customView.findViewById(R.id.Name_of_the_current_user);
         nameDisplay.setText(model_class.getName());
         TextView collegeDisplay = customView.findViewById(R.id.name_of_the_college_of_the_current_user);

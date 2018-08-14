@@ -41,4 +41,8 @@
     <string name="today_s_activity">Today\'s Activity</string>
     <string name="welcome">Welcome</string>
     <string name="profile">Profile</string>
+    <string name="capture_students_image">Capture Students Image</string>
+    <string name="worker_type">Worker Type</string>
+    <string name="manager">Manager</string>
+    <string name="worker">Worker</string>
 </resources>

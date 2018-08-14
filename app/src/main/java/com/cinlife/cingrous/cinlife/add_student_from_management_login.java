@@ -53,19 +53,18 @@ public class add_student_from_management_login extends AppCompatActivity {
     private int from_mYear, from_mMonth, from_mDay, to_mYear, to_mMonth, to_mDay;
     TextView date_from, date_to;
 
-
-
     FirebaseAuth mAuth;
     TextInputEditText new_user_name,new_user_address,new_user_phone_number,new_user_email,new_user_password,
             new_user_confirm_password,college_name,name_of_the_project;
-    String name,address,phone_number,email_id,password,confirm_password,duration_from_date,duration_to_date,college,project_name, user_add_Uid;
+    String name,address,phone_number,email_id,password,confirm_password,duration_from_date,duration_to_date,
+            worker_type,college,project_name, user_add_Uid;
     TextView new_user_duration_from_date,new_user_duration_to_date;
-    TextInputLayout new_user_confirm_passeord_layout;
+    TextInputLayout new_user_confirm_password_layout;
     ImageButton mImageView;
 
     private StorageReference mStorageRef;
 
-    RadioGroup gender;
+    RadioGroup gender,worker_Type;
     Bitmap imageBitmap;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -86,7 +85,7 @@ public class add_student_from_management_login extends AppCompatActivity {
         date_to = findViewById(R.id.date_to_from_add_details);
         mImageView = findViewById(R.id.student_photo_at_add_worker_tab_in_manager_login);
 
-        new_user_confirm_passeord_layout = findViewById(R.id.confirm_password_of_the_new_user_layout);
+        new_user_confirm_password_layout = findViewById(R.id.confirm_password_of_the_new_user_layout);
         new_user_name = findViewById(R.id.name_of_the_student_yet_to_be_created);
         new_user_address = findViewById(R.id.address_of_the_new_student);
         new_user_phone_number = findViewById(R.id.phone_number_of_the_new_user);
@@ -179,12 +178,17 @@ public class add_student_from_management_login extends AppCompatActivity {
                 .show();
     }
 
+    @SuppressLint("WrongViewCast")
     public void create_user_account(View view) {
 
         gender = findViewById(R.id.gender_at_add_student);
         int selectedId = gender.getCheckedRadioButtonId();
         final RadioButton radioSexButton = findViewById(selectedId);
 
+        worker_Type = findViewById(R.id.worker_type_at_add_worker);
+        int selectId = worker_Type.getCheckedRadioButtonId();
+        final RadioButton workerType = findViewById(selectId);
+        final String sampleType = workerType.getText().toString();
 
         name = new_user_name.getText().toString().trim();
         address = new_user_address.getText().toString().trim();
@@ -214,6 +218,8 @@ public class add_student_from_management_login extends AppCompatActivity {
                                 user_add_Uid = auth.getUid();
                                 // Sign in success, update UI with the signed-in user's information
 
+
+
                                 final StorageReference mountainImagesRef = mStorageRef.child("Profile Picture/"+user_add_Uid+".jpg");
                                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                                 imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
@@ -241,9 +247,9 @@ public class add_student_from_management_login extends AppCompatActivity {
                                                 String Url = uri.toString().trim();
 
                                                 Model_class  model_class = new Model_class(address, duration_from_date, duration_to_date
-                                                        ,email_id, radioSexButton.getText().toString(), name, college, project_name, phone_number,Url);
+                                                        ,email_id, radioSexButton.getText().toString(), sampleType,name, college, project_name, phone_number,Url);
 
-                                                db.collection("User Profile").document(user_add_Uid).set(model_class).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                db.collection("Users").document(user_add_Uid).set(model_class).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
 
@@ -278,7 +284,7 @@ public class add_student_from_management_login extends AppCompatActivity {
                     });
 
         }else {
-            new_user_confirm_passeord_layout.setError("Password does not match");
+            new_user_confirm_password_layout.setError("Password does not match");
 
         }
     }
@@ -302,8 +308,6 @@ public class add_student_from_management_login extends AppCompatActivity {
             }
 
         }
-
-
 
     }
 
