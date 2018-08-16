@@ -1,7 +1,5 @@
 package com.cinlife.cingrous.cinlife.model;
 
-import android.net.Uri;
-
 import java.util.Map;
 
 public class Model_class {

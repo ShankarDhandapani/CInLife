@@ -219,9 +219,6 @@ public class Student extends AppCompatActivity{
 
                 }
             }
-        } else {
-            // This is important, otherwise the result will not be passed to the fragment
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+        } else { super.onActivityResult(requestCode, resultCode, data); }
     }
 }

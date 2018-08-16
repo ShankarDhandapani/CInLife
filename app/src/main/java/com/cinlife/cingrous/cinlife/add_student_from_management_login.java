@@ -4,7 +4,6 @@ package com.cinlife.cingrous.cinlife;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -99,7 +98,6 @@ public class add_student_from_management_login extends AppCompatActivity {
     }
 
     public void from_date_selector(View view) {
-        // Get Current Date
         final Calendar c = Calendar.getInstance();
         from_mYear = c.get(Calendar.YEAR);
         from_mMonth = c.get(Calendar.MONTH);
@@ -122,7 +120,6 @@ public class add_student_from_management_login extends AppCompatActivity {
     }
 
     public void to_date_selector(View view) {
-        // Get Current Date
         final Calendar c = Calendar.getInstance();
         to_mYear = c.get(Calendar.YEAR);
         to_mMonth = c.get(Calendar.MONTH);
@@ -216,9 +213,6 @@ public class add_student_from_management_login extends AppCompatActivity {
                                 FirebaseUser auth = task.getResult().getUser();
                                 final FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 user_add_Uid = auth.getUid();
-                                // Sign in success, update UI with the signed-in user's information
-
-
 
                                 final StorageReference mountainImagesRef = mStorageRef.child("Profile Picture/"+user_add_Uid+".jpg");
                                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -228,7 +222,6 @@ public class add_student_from_management_login extends AppCompatActivity {
                                 uploadTask.addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception exception) {
-                                        // Handle unsuccessful uploads
                                         new AlertDialog.Builder(
                                                 add_student_from_management_login.this)
                                                 .setMessage("Error in uploading Image.")
@@ -239,7 +232,6 @@ public class add_student_from_management_login extends AppCompatActivity {
                                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                                         mountainImagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                             @Override
                                             public void onSuccess(Uri uri) {
@@ -273,13 +265,10 @@ public class add_student_from_management_login extends AppCompatActivity {
                                     }
                                 });
                             } else {
-                                // If sign in fails, display a message to the user.
                                 Toast.makeText(add_student_from_management_login.this, "User not created",
                                         Toast.LENGTH_SHORT).show();
 
                             }
-
-                            // ...
                         }
                     });
 
