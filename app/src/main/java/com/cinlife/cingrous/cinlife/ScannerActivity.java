@@ -2,7 +2,6 @@ package com.cinlife.cingrous.cinlife;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -10,7 +9,7 @@ import android.widget.Button;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
-public class ScannerActivity extends AppCompatActivity implements DecoratedBarcodeView.TorchListener {
+public class ScannerActivity extends BaseActivity implements DecoratedBarcodeView.TorchListener {
 
     private CaptureManager capture;
     private DecoratedBarcodeView barcodeScannerView;

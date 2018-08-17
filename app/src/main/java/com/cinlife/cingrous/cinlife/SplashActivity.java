@@ -1,24 +1,35 @@
 package com.cinlife.cingrous.cinlife;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
+
+    static public final int REQUEST_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent i = new Intent(SplashActivity.this, LoginActivity.class);
-                startActivity(i);
-                finish();
+        if (isOnline()){
+            if (isGPSEnabled()){
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(SplashActivity.this, LoginActivity.class);
+                        startActivity(i);
+                        finish();
+                    }
+                }, 3000);
+            }else {
+                showAlertDialog("Please turn on Location!", SplashActivity.this,"","Try Again");
             }
-        }, 3000);
+        }else {
+            showAlertDialog("Please Connect to internet!", SplashActivity.this,"","Try Again");
+        }
     }
 }

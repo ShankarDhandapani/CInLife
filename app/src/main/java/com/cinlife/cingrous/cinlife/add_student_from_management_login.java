@@ -17,7 +17,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -45,7 +44,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 
-public class add_student_from_management_login extends AppCompatActivity {
+public class add_student_from_management_login extends BaseActivity {
 
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 100;
 
@@ -201,18 +200,15 @@ public class add_student_from_management_login extends AppCompatActivity {
 
 
         if(password.equals(confirm_password)){
-
             mAuth.createUserWithEmailAndPassword(email_id, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-
-                                Toast.makeText(add_student_from_management_login.this, "Creating User ....", Toast.LENGTH_SHORT).show();
-
                                 FirebaseUser auth = task.getResult().getUser();
                                 final FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 user_add_Uid = auth.getUid();
+                                showProgression(add_student_from_management_login.this,"Uploading Image......","").show();
 
                                 final StorageReference mountainImagesRef = mStorageRef.child("Profile Picture/"+user_add_Uid+".jpg");
                                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -236,6 +232,10 @@ public class add_student_from_management_login extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Uri uri) {
 
+                                                showProgression(add_student_from_management_login.this,"Uploading Image......","").dismiss();
+                                                showProgression(add_student_from_management_login.this,"Creating User......","").show();
+
+
                                                 String Url = uri.toString().trim();
 
                                                 Model_class  model_class = new Model_class(address, duration_from_date, duration_to_date
@@ -244,7 +244,7 @@ public class add_student_from_management_login extends AppCompatActivity {
                                                 db.collection("Users").document(user_add_Uid).set(model_class).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-
+                                                        showProgression(add_student_from_management_login.this,"Creating User......","").dismiss();
                                                         new AlertDialog.Builder(
                                                                 add_student_from_management_login.this)
                                                                 .setTitle(R.string.success)

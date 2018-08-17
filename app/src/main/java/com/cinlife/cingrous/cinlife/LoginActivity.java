@@ -1,9 +1,10 @@
 package com.cinlife.cingrous.cinlife;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,7 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -43,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
                 pass = password_from_login.getText().toString().trim();
 
                 if (!email.equals("") || !pass.equals("")) {
+                    showProgression(LoginActivity.this,"Logging In......","").show();
                     mAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -83,10 +85,12 @@ public class LoginActivity extends AppCompatActivity {
                         assert data != null;
                         if(data.get("worker_type").equals("Manager")) {
                             startActivity(new Intent(LoginActivity.this, Management.class));
+                            finish();
                             Toast.makeText(LoginActivity.this, "Management Login", Toast.LENGTH_LONG).show();
                         }
                         if(data.get("worker_type").equals("Worker")){
                             startActivity(new Intent(LoginActivity.this, Student.class));
+                            finish();
                             Toast.makeText(LoginActivity.this, "Worker Login", Toast.LENGTH_LONG).show();
                         }
 
@@ -94,6 +98,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-        finish();
+        showProgression(LoginActivity.this,"Logging In......","").dismiss();
     }
 }
