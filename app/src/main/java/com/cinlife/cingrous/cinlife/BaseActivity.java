@@ -1,5 +1,6 @@
 package com.cinlife.cingrous.cinlife;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,7 +14,18 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public abstract class BaseActivity extends AppCompatActivity {
+
+    Date date = new Date();
+    @SuppressLint("SimpleDateFormat") DateFormat timeFormat = new SimpleDateFormat("h:mm a");
+    @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+    final String formattedTime = timeFormat.format(date.getTime());
+    final String formattedDate = dateFormat.format(date.getTime());
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
@@ -47,6 +59,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .setTitle(title)
                 .setMessage(message)
                 .setNegativeButton(button_text, null)
+                .setCancelable(false)
                 .show();
     }
 

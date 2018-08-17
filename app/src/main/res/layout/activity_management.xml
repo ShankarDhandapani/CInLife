@@ -4,7 +4,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Management">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="60"
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:weightSum="70">
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="30"
+                android:text="@string/attendance_on"
+                android:paddingLeft="10dp"
+                android:textColor="@color/colorAccentText"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/view_entry_on_details"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="30"
+                android:text="@string/date_pattern_in_duration"
+                android:textColor="@color/colorAccent"
+                android:textSize="15sp" />
+
+            <ImageButton
+                android:id="@+id/date_for_which_the_information_is_needed"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="10"
+                android:background="@color/zxing_transparent"
+                android:contentDescription="@string/time"
+                android:onClick="information_date"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_date_range_black_24dp" />
+
+            0dp
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="50">
+
+            <ExpandableListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
+                android:divider="@android:color/darker_gray"
+                android:id="@+id/user_details_in_list_view_at_management_login"
+                android:dividerHeight="0.5dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

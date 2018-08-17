@@ -29,10 +29,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Student extends BaseActivity{
@@ -41,6 +37,7 @@ public class Student extends BaseActivity{
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String user_add_Uid = user != null ? user.getUid() : null;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private Map<String, Object> users;
 
 
     @Override
@@ -156,24 +153,21 @@ public class Student extends BaseActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //We will get scan results here
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        String[] input = formattedDate.split("-");
+        final String year = input[2], month = input[1], date1 = input[0];
+
+        //show dialogue with result
+
 
         //check for null
         if (result != null) {
             if (result.getContents() == null) {
                 Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
             } else {
-
-                Date date = new Date();
-                @SuppressLint("SimpleDateFormat") DateFormat timeFormat = new SimpleDateFormat("h:mm a");
-                @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-                final String formattedTime = timeFormat.format(date.getTime());
-                final String formattedDate = dateFormat.format(date.getTime());
-                //show dialogue with result
-                final Map<String, Object> user = new HashMap<>();
                 if(result.getContents().equals("cingrous_in")){
 
-                    user.put("in_time", formattedTime);
-                    db.collection("Users").document(mAuth.getUid()).collection("User Log").document(formattedDate).set(user);
+                    users.put("in_time", formattedTime);
+                    db.collection("Users").document("Log").collection(year).document(month).collection(date1).document(mAuth.getUid()).set(users);
 
                     AlertDialog alertDialog = new AlertDialog.Builder(
                             Student.this)
@@ -196,14 +190,17 @@ public class Student extends BaseActivity{
                     dialog.show();
 
                     submit_btn.setOnClickListener(new View.OnClickListener() {
+
                         @Override
                         public void onClick(View view) {
 
                             if(activity_content.length() > 10){
                                 String activity_done = activity_content.getText().toString().trim();
-                                user.put("out_time", formattedTime);
-                                user.put("activity", activity_done);
-                                db.collection("Users").document(mAuth.getUid()).collection("User Log").document(formattedDate).update(user);
+                                users.put("out_time", formattedTime);
+                                users.put("activity", activity_done);
+
+                                db.collection(year).document(month).collection(date1).document(mAuth.getUid()).update(users);
+
                                 new AlertDialog.Builder(
                                         Student.this)
                                         .setMessage("Out Time : "+formattedTime+"\n Activity : "+activity_done)

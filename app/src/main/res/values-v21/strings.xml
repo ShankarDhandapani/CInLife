@@ -45,4 +45,6 @@
     <string name="worker_type">Worker Type</string>
     <string name="manager">Manager</string>
     <string name="worker">Worker</string>
+    <string name="view_student_profile">Student Profile</string>
+    <string name="attendance_on">View Entry On : </string>
 </resources>
