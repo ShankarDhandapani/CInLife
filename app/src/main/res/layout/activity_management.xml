@@ -1,10 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="60"
     tools:context=".Management">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:weightSum="60">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="15"
+            android:text="@string/view_entry_on"
+            android:textColor="@color/colorAccentText"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/date_from_from_add_details"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="35"
+            android:text="@string/date_pattern_in_duration"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/set_date_from_from_add_details"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="10"
+            android:background="@color/zxing_transparent"
+            android:contentDescription="@string/time"
+            android:onClick="from_date_selector"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_date_range_black_24dp" />
 
 
-</RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="50">
+
+        <ExpandableListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/expandable_user_view_at_management_activity"
+            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="0.5dp">
+
+        </ExpandableListView>
+
+    </LinearLayout>
+
+</LinearLayout>
