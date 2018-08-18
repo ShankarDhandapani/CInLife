@@ -1,6 +1,7 @@
 package com.cinlife.cingrous.cinlife;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -29,7 +31,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.nio.CharBuffer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,6 +50,14 @@ public class Management extends BaseActivity {
     List<String> expandableListTitle;
     HashMap<String, List<String>> expandableListDetail;
     private int lastExpandedPosition = -1;
+    private int from_mYear;
+    private int from_mMonth;
+    private int from_mDay;
+    private TextView view_entry_on_text_view;
+
+    Date date = new Date();
+    @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    String formattedDate = dateFormat.format(date.getTime());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +66,8 @@ public class Management extends BaseActivity {
         setTitle(getString(R.string.management));
 
         mAuth = FirebaseAuth.getInstance();
+        view_entry_on_text_view = findViewById(R.id.view_entry_on_text_view);
+        view_entry_on_text_view.setText(formattedDate);
 
         FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -194,5 +210,30 @@ public class Management extends BaseActivity {
                     }
                 }).setNegativeButton("No", null)
                 .show();
+    }
+
+    public void view_entry_on(View view) {
+        final Calendar c = Calendar.getInstance();
+        from_mYear = c.get(Calendar.YEAR);
+        from_mMonth = c.get(Calendar.MONTH);
+        from_mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        String entry_on = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+                        view_entry_on_text_view.setText(entry_on);
+                        Toast.makeText(Management.this,entry_on,Toast.LENGTH_SHORT).show();
+
+                    }
+                }, from_mYear, from_mMonth, from_mDay);
+        datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());
+        datePickerDialog.setCancelable(false);
+        datePickerDialog.show();
     }
 }

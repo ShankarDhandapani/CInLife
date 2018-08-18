@@ -51,13 +51,7 @@ public class Student extends BaseActivity{
 
         mAuth = FirebaseAuth.getInstance();
 
-       /* findViewById(R.id.float_btn_qr_scan).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new IntentIntegrator(Student.this).setCaptureActivity(ScannerActivity.class).initiateScan();
 
-            }
-        });*/
     }
 
     @Override
