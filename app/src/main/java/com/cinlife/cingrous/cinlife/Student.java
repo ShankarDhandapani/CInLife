@@ -162,15 +162,19 @@ public class Student extends BaseActivity{
 
                 Date date = new Date();
                 @SuppressLint("SimpleDateFormat") DateFormat timeFormat = new SimpleDateFormat("h:mm a");
-                @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+                @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy");
                 final String formattedTime = timeFormat.format(date.getTime());
                 final String formattedDate = dateFormat.format(date.getTime());
+
+                String[] input = formattedDate.split("-");
+                final String year = input[2], month = input[1], date1 = input[0];
+
                 //show dialogue with result
                 final Map<String, Object> user = new HashMap<>();
                 if(result.getContents().equals("cingrous_in")){
 
                     user.put("in_time", formattedTime);
-                    db.collection("Users").document(mAuth.getUid()).collection("User Log").document(formattedDate).set(user);
+                    db.collection(year).document(month).collection(date1).document(mAuth.getUid()).set(user);
 
                     AlertDialog alertDialog = new AlertDialog.Builder(
                             Student.this)
@@ -200,7 +204,7 @@ public class Student extends BaseActivity{
                                 String activity_done = activity_content.getText().toString().trim();
                                 user.put("out_time", formattedTime);
                                 user.put("activity", activity_done);
-                                db.collection("Users").document(mAuth.getUid()).collection("User Log").document(formattedDate).update(user);
+                                db.collection(year).document(month).collection(date1).document(mAuth.getUid()).update(user);
                                 new AlertDialog.Builder(
                                         Student.this)
                                         .setMessage("Out Time : "+formattedTime+"\n Activity : "+activity_done)

@@ -43,7 +43,7 @@ public class LoginActivity extends BaseActivity {
                 email = email_from_login.getText().toString().trim();
                 pass = password_from_login.getText().toString().trim();
 
-                if (!email.equals("") || !pass.equals("")) {
+                if (!email.equals("") && !pass.equals("")) {
 
                     mAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override

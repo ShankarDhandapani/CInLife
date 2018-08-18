@@ -140,6 +140,7 @@ public class add_student_from_management_login extends BaseActivity {
 
                     }
                 }, to_mYear, to_mMonth, to_mDay);
+        datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
         datePickerDialog.setCancelable(false);
         datePickerDialog.show();
     }
@@ -187,7 +188,6 @@ public class add_student_from_management_login extends BaseActivity {
         worker_Type = findViewById(R.id.worker_type_at_add_worker);
         int selectId = worker_Type.getCheckedRadioButtonId();
         final RadioButton workerType = findViewById(selectId);
-        final String sampleType = workerType.getText().toString();
 
         name = new_user_name.getText().toString().trim();
         address = new_user_address.getText().toString().trim();
@@ -200,84 +200,91 @@ public class add_student_from_management_login extends BaseActivity {
         college = college_name.getText().toString().trim();
         project_name = name_of_the_project.getText().toString().trim();
 
+        if(!name.equals("") && !address.equals("") && !phone_number.equals("") && !email_id.equals("")
+                && !password.equals("") && !confirm_password.equals("") && !duration_from_date.equals("DD/MM/YYYY")
+                && !duration_to_date.equals("DD/MM/YYYY") && !college.equals("") && !project_name.equals("")
+                && !workerType.getText().toString().trim().equals("") && !radioSexButton.getText().toString().trim().equals("")) {
+            if (password.equals(confirm_password)) {
+                if (phone_number.length() == 10) {
+                    mAuth.createUserWithEmailAndPassword(email_id, password)
+                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        FirebaseAuth usera = FirebaseAuth.getInstance();
+                                        FirebaseUser auth = task.getResult().getUser();
+                                        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                        user_add_Uid = auth.getUid();
+                                        showProgression(add_student_from_management_login.this,"Uploading Image......","").show();
 
-
-        if(password.equals(confirm_password)){
-            mAuth.createUserWithEmailAndPassword(email_id, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                FirebaseUser auth = task.getResult().getUser();
-                                final FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                user_add_Uid = auth.getUid();
-                                showProgression(add_student_from_management_login.this,"Uploading Image......","").show();
-
-                                final StorageReference mountainImagesRef = mStorageRef.child("Profile Picture/"+user_add_Uid+".jpg");
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-                                byte[] data = baos.toByteArray();
-                                UploadTask uploadTask = mountainImagesRef.putBytes(data);
-                                uploadTask.addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        new AlertDialog.Builder(
-                                                add_student_from_management_login.this)
-                                                .setMessage("Error in uploading Image.")
-                                                .setNegativeButton("OK",null)
-                                                .show();
-
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        mountainImagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        final StorageReference mountainImagesRef = mStorageRef.child("Profile Picture/"+user_add_Uid+".jpg");
+                                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+                                        byte[] data = baos.toByteArray();
+                                        UploadTask uploadTask = mountainImagesRef.putBytes(data);
+                                        uploadTask.addOnFailureListener(new OnFailureListener() {
                                             @Override
-                                            public void onSuccess(Uri uri) {
-
-                                                showProgression(add_student_from_management_login.this,"Uploading Image......","").dismiss();
-                                                showProgression(add_student_from_management_login.this,"Creating User......","").show();
-
-
-                                                String Url = uri.toString().trim();
-
-                                                Model_class  model_class = new Model_class(address, duration_from_date, duration_to_date
-                                                        ,email_id, radioSexButton.getText().toString(), sampleType,name, college, project_name, phone_number,Url);
-
-                                                db.collection("Users").document(user_add_Uid).set(model_class).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        showProgression(add_student_from_management_login.this,"Creating User......","").dismiss();
-                                                        new AlertDialog.Builder(
-                                                                add_student_from_management_login.this)
-                                                                .setTitle(R.string.success)
-                                                                .setMessage("Account for "+name+" is created successfully.")
-                                                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                                                    @Override
-                                                                    public void onClick(DialogInterface dialog, int which) {
-                                                                        startActivity(new Intent(add_student_from_management_login.this, Management.class));
-                                                                        finish();
-                                                                    }
-                                                                })
-                                                                .show();
-                                                    }
-                                                });
+                                            public void onFailure(@NonNull Exception exception) {
+                                                new AlertDialog.Builder(
+                                                        add_student_from_management_login.this)
+                                                        .setMessage("Error in uploading Image.")
+                                                        .setNegativeButton("OK",null)
+                                                        .show();
 
                                             }
+                                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                mountainImagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                    @Override
+                                                    public void onSuccess(Uri uri) {
+
+                                                        showProgression(add_student_from_management_login.this,"Uploading Image......","").dismiss();
+                                                        showProgression(add_student_from_management_login.this,"Creating User......","").show();
+
+                                                        String Url = uri.toString().trim();
+
+                                                        Model_class  model_class = new Model_class(address, duration_from_date, duration_to_date
+                                                                ,email_id, radioSexButton.getText().toString().trim() , workerType.getText().toString().trim() ,name, college, project_name, phone_number,Url);
+                                                        db.collection("Users").document(user_add_Uid).set(model_class).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                showProgression(add_student_from_management_login.this,"Creating User......","").dismiss();
+                                                                new AlertDialog.Builder(
+                                                                        add_student_from_management_login.this)
+                                                                        .setTitle(R.string.success)
+                                                                        .setMessage("Account for "+name+" is created successfully.")
+                                                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                                            @Override
+                                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                                startActivity(new Intent(add_student_from_management_login.this, Management.class));
+                                                                                finish();
+                                                                            }
+                                                                        })
+                                                                        .show();
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
                                         });
+                                        usera.signOut();
+                                    } else {
+                                        Toast.makeText(add_student_from_management_login.this, "User not created",
+                                                Toast.LENGTH_SHORT).show();
+
                                     }
-                                });
-                            } else {
-                                Toast.makeText(add_student_from_management_login.this, "User not created",
-                                        Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {
+                    new_user_phone_number.setError("Invalid Phone Number.");
+                }
+            } else {
+                new_user_confirm_password_layout.setError("Password does not match");
 
-                            }
-                        }
-                    });
-
-        }else {
-            new_user_confirm_password_layout.setError("Password does not match");
-
+            }
+        }else{
+            showAlertDialog("Every Fields are Required",add_student_from_management_login.this, "Error", "OK");
         }
     }
 

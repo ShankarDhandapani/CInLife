@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,9 +29,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
-import java.nio.CharBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,17 +40,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Management extends BaseActivity {
 
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
     ExpandableListView expandableListView;
-    ExpandableListAdapter expandableListAdapter;
-    List<String> expandableListTitle;
-    HashMap<String, List<String>> expandableListDetail;
+
     private int lastExpandedPosition = -1;
     private int from_mYear;
     private int from_mMonth;
@@ -56,7 +55,7 @@ public class Management extends BaseActivity {
     private TextView view_entry_on_text_view;
 
     Date date = new Date();
-    @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy");
     String formattedDate = dateFormat.format(date.getTime());
 
     @Override
@@ -64,6 +63,8 @@ public class Management extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_management);
         setTitle(getString(R.string.management));
+
+        expandableListView = findViewById(R.id.expandable_user_view_at_management_activity);
 
         mAuth = FirebaseAuth.getInstance();
         view_entry_on_text_view = findViewById(R.id.view_entry_on_text_view);
@@ -81,43 +82,6 @@ public class Management extends BaseActivity {
             }
         };
 
-
-        expandableListView = findViewById(R.id.expandable_user_view_at_management_activity);
-        expandableListDetail = ExpandableListDataPump.getData();
-        expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
-        expandableListAdapter = new CustomExpandableListAdapter(Management.this, expandableListTitle, expandableListDetail);
-        expandableListView.setAdapter(expandableListAdapter);
-        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-
-            @Override
-            public void onGroupExpand(int groupPosition) {
-
-                if (lastExpandedPosition != -1
-                        && groupPosition != lastExpandedPosition) {
-                    expandableListView.collapseGroup(lastExpandedPosition);
-                }
-                lastExpandedPosition = groupPosition;
-
-            }
-        });
-
-        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-
-            }
-        });
-
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-
-
-                return false;
-            }
-        });
     }
 
     @Override
@@ -213,7 +177,10 @@ public class Management extends BaseActivity {
     }
 
     public void view_entry_on(View view) {
+        final HashMap<String, List<String>> expandableListDetail = new HashMap<>();
+
         final Calendar c = Calendar.getInstance();
+
         from_mYear = c.get(Calendar.YEAR);
         from_mMonth = c.get(Calendar.MONTH);
         from_mDay = c.get(Calendar.DAY_OF_MONTH);
@@ -224,16 +191,104 @@ public class Management extends BaseActivity {
 
 
                     @Override
-                    public void onDateSet(DatePicker view, int year,
+                    public void onDateSet(DatePicker view, int years,
                                           int monthOfYear, int dayOfMonth) {
-                        String entry_on = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+
+                        String date = dayOfMonth+"";
+                        String month = ""+(monthOfYear + 1);
+                        String year =  years+"";
+                        String entry_on = date+"-"+month+"-"+year;
                         view_entry_on_text_view.setText(entry_on);
                         Toast.makeText(Management.this,entry_on,Toast.LENGTH_SHORT).show();
 
+                        db.collection(year).document(month).collection(date).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            public Map<String, Object> name_map;
+
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                                final List<String> expandableListContent = new ArrayList<>();
+                                for(QueryDocumentSnapshot document : task.getResult()){
+                                    Map<String, Object> entry = document.getData();
+                                    String userId = document.getId();
+
+
+
+                                    expandableListContent.clear();
+                                    expandableListContent.add("In Time : "+entry.get("in_time"));
+                                    expandableListContent.add("Out Time : "+entry.get("out_time"));
+                                    expandableListContent.add("Activity : "+entry.get("activity"));
+
+                                    db.collection("Users").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if(task.isSuccessful()) {
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document.exists()) {
+                                                    /*Model_class model_class = new Model_class(document.getData());
+                                                    view_profile(model_class);*/
+
+                                                    name_map = document.getData();
+                                                    assert name_map != null;
+                                                    Log.d("test", (String) name_map.get("name"));
+                                                    String user_name = name_map.get("name").toString().trim();
+
+                                                    expandableListDetail.put(user_name, expandableListContent);
+
+                                                }
+                                                List<String> expandableListTitle = new ArrayList<>(expandableListDetail.keySet());
+                                                //Log.d("Test 1", String.valueOf(expandableListDetail));
+
+                                                ExpandableListAdapter expandableListAdapter = new CustomExpandableListAdapter(Management.this, expandableListTitle, expandableListDetail);
+                                                expandableListView.setAdapter(expandableListAdapter);
+                                            }
+
+                                        }
+                                    });
+
+                                }
+
+                            }
+                        });
+                        //paste here if error
+
+                        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+
+                            @Override
+                            public void onGroupExpand(int groupPosition) {
+
+                                if (lastExpandedPosition != -1
+                                        && groupPosition != lastExpandedPosition) {
+                                    expandableListView.collapseGroup(lastExpandedPosition);
+                                }
+                                lastExpandedPosition = groupPosition;
+
+                            }
+                        });
+
+                        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+
+                            @Override
+                            public void onGroupCollapse(int groupPosition) {
+
+                            }
+                        });
+
+                        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                            @Override
+                            public boolean onChildClick(ExpandableListView parent, View v,
+                                                        int groupPosition, int childPosition, long id) {
+
+
+                                return false;
+                            }
+                        });
+
                     }
                 }, from_mYear, from_mMonth, from_mDay);
-        datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());
+        //datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());
         datePickerDialog.setCancelable(false);
         datePickerDialog.show();
+
     }
 }
