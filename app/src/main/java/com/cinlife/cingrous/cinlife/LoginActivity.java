@@ -52,7 +52,6 @@ public class LoginActivity extends BaseActivity {
                                 showProgression(LoginActivity.this,"Logging In......","").show();
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 assert user != null;
-
                                 updateUI(user);
                             } else {
                                 Toast.makeText(LoginActivity.this, "Authentication Failed!!", Toast.LENGTH_LONG).show();
@@ -95,7 +94,6 @@ public class LoginActivity extends BaseActivity {
                             finish();
                             Toast.makeText(LoginActivity.this, "Worker Login", Toast.LENGTH_LONG).show();
                         }
-
                     }
                 }
             }
