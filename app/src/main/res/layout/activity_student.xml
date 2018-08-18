@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Student">
 
-    <android.support.design.widget.FloatingActionButton
+   <!-- <android.support.design.widget.FloatingActionButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -16,7 +16,7 @@
         android:src="@drawable/icon_qr_scanner"
         android:id="@+id/float_btn_qr_scan"
         android:layout_marginRight="24dp"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true" />-->
 
 
 </RelativeLayout>

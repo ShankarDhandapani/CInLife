@@ -115,8 +115,6 @@ public class add_student_from_management_login extends BaseActivity {
 
                     }
                 }, from_mYear, from_mMonth, from_mDay);
-        datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
-        datePickerDialog.setCancelable(false);
         datePickerDialog.show();
     }
 
@@ -140,8 +138,6 @@ public class add_student_from_management_login extends BaseActivity {
 
                     }
                 }, to_mYear, to_mMonth, to_mDay);
-        datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
-        datePickerDialog.setCancelable(false);
         datePickerDialog.show();
     }
 

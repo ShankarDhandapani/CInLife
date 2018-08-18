@@ -44,13 +44,15 @@ public class LoginActivity extends BaseActivity {
                 pass = password_from_login.getText().toString().trim();
 
                 if (!email.equals("") || !pass.equals("")) {
-                    showProgression(LoginActivity.this,"Logging In......","").show();
+
                     mAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+                                showProgression(LoginActivity.this,"Logging In......","").show();
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 assert user != null;
+
                                 updateUI(user);
                             } else {
                                 Toast.makeText(LoginActivity.this, "Authentication Failed!!", Toast.LENGTH_LONG).show();
