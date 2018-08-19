@@ -3,10 +3,11 @@ package com.cinlife.cingrous.cinlife;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,13 +36,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Student extends BaseActivity{
+public class Student extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String user_add_Uid = user != null ? user.getUid() : null;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,40 @@ public class Student extends BaseActivity{
 
         mAuth = FirebaseAuth.getInstance();
 
+        Task<DocumentSnapshot> documentSnapshotTask = db.collection("Users").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Model_class model_class = new Model_class(document.getData());
+                        set_profile(model_class);
+                    }
+                }
+            }
+        });
 
+        findViewById(R.id.qr_code_scan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new IntentIntegrator(Student.this).setCaptureActivity(ScannerActivity.class).initiateScan();
+            }
+        });
+
+    }
+
+    private void set_profile(Model_class model_class) {
+        ImageView profilePicture = findViewById(R.id.profile_picture_of_the_current_logged_in_student);
+
+        Picasso.with(this)
+                .load(model_class.getProfilePicture())
+                .into(profilePicture);
+
+        TextView studentName = findViewById(R.id.name_of_the_current_logged_in_student);
+        studentName.setText(model_class.getName());
+
+        TextView worker_type = findViewById(R.id.worker_type_of_the_current_logged_in_student);
+        worker_type.setText(model_class.getWorker_type());
     }
 
     @Override
@@ -80,9 +111,6 @@ public class Student extends BaseActivity{
                         }
                     }
                 });
-                return true;
-            case R.id.scan_qr_code:
-                new IntentIntegrator(Student.this).setCaptureActivity(ScannerActivity.class).initiateScan();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

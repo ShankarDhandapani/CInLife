@@ -43,7 +43,7 @@ public class SplashActivity extends BaseActivity {
                                         assert data != null;
                                         if (data.get("worker_type").equals("Manager")) {
                                             updateUI("manager");
-                                        } else if (data.get("worker_type").equals("Worker")) {
+                                        } else if (data.get("worker_type").equals("Employee")) {
                                             updateUI("worker");
                                         }
                                     }

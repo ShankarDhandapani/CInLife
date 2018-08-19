@@ -89,7 +89,7 @@ public class LoginActivity extends BaseActivity {
                             finish();
                             Toast.makeText(LoginActivity.this, "Management Login", Toast.LENGTH_LONG).show();
                         }
-                        if(data.get("worker_type").equals("Worker")){
+                        if(data.get("worker_type").equals("Employee")){
                             startActivity(new Intent(LoginActivity.this, Student.class));
                             finish();
                             Toast.makeText(LoginActivity.this, "Worker Login", Toast.LENGTH_LONG).show();

@@ -3,12 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.cinlife.cingrous.cinlife">
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
 
-    <uses-permission android:name="android.permission.CAMERA" android:required="true"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission
+        android:name="android.permission.CAMERA"
+        android:required="true" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:icon="@drawable/logo"
@@ -29,11 +32,15 @@
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Management" />
-        <activity android:name=".Student" />
         <activity android:name=".add_student_from_management_login" />
         <activity
             android:name=".ScannerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Student"></activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

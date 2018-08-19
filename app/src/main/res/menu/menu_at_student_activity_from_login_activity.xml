@@ -5,17 +5,15 @@
     <item
         android:icon="@drawable/ic_power_settings_new_black_24dp"
         android:orderInCategory="100"
+        app:showAsAction="always"
         android:id="@+id/logout_from_worker_dash"
         android:title="@string/logout" />
 
     <item
         android:icon="@drawable/ic_account_box_black_24dp"
         android:orderInCategory="90"
+        app:showAsAction="always"
         android:id="@+id/profile_from_worker_dash"
         android:title="@string/profile" />
-    <item
-        android:orderInCategory="90"
-        android:id="@+id/scan_qr_code"
-        android:title="@string/scan_the_qr_code" />
 
 </menu>
