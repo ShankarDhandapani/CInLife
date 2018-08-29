@@ -38,8 +38,8 @@ public class LoginActivity extends BaseActivity {
 
         myLayout = findViewById(R.id.myLayout);
         animationDrawable = (AnimationDrawable) myLayout.getBackground();
-        animationDrawable.setEnterFadeDuration(3500);
-        animationDrawable.setExitFadeDuration(3500);
+        animationDrawable.setEnterFadeDuration(3000);
+        animationDrawable.setExitFadeDuration(3000);
         animationDrawable.start();
 
         mAuth = FirebaseAuth.getInstance();
