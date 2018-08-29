@@ -4,6 +4,7 @@ package com.cinlife.cingrous.cinlife;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -206,69 +207,70 @@ public class add_student_from_management_login extends BaseActivity {
                 && !workerType.getText().toString().trim().equals("") && !radioSexButton.getText().toString().trim().equals("")) {
             if (password.equals(confirm_password)) {
                 if (phone_number.length() == 10) {
+                    if(imageBitmap != null){
                     mAuth.createUserWithEmailAndPassword(email_id, password)
                             .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        FirebaseAuth usera = FirebaseAuth.getInstance();
                                         FirebaseUser auth = task.getResult().getUser();
                                         final FirebaseFirestore db = FirebaseFirestore.getInstance();
                                         user_add_Uid = auth.getUid();
-                                        showProgression(add_student_from_management_login.this,"Uploading Image......","").show();
 
-                                        final StorageReference mountainImagesRef = mStorageRef.child("Profile Picture/"+user_add_Uid+".jpg");
-                                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-                                        byte[] data = baos.toByteArray();
-                                        UploadTask uploadTask = mountainImagesRef.putBytes(data);
-                                        uploadTask.addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception exception) {
-                                                new AlertDialog.Builder(
-                                                        add_student_from_management_login.this)
-                                                        .setMessage("Error in uploading Image.")
-                                                        .setNegativeButton("OK",null)
-                                                        .show();
+                                        final ProgressDialog uploading_image_progression = showProgression(add_student_from_management_login.this, "Uploading Image......", "");
+                                        uploading_image_progression.show();
+                                            final StorageReference mountainImagesRef = mStorageRef.child("Profile Picture/" + user_add_Uid + ".jpg");
+                                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+                                            byte[] data = baos.toByteArray();
+                                            UploadTask uploadTask = mountainImagesRef.putBytes(data);
+                                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception exception) {
+                                                    new AlertDialog.Builder(
+                                                            add_student_from_management_login.this)
+                                                            .setMessage("Error in uploading Image.")
+                                                            .setNegativeButton("OK", null)
+                                                            .show();
+                                                }
+                                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                    mountainImagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                        @Override
+                                                        public void onSuccess(Uri uri) {
 
-                                            }
-                                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                mountainImagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                    @Override
-                                                    public void onSuccess(Uri uri) {
+                                                            uploading_image_progression.dismiss();
+                                                            final ProgressDialog create_user_progression = showProgression(add_student_from_management_login.this, "Creating User......", "");
+                                                            create_user_progression.show();
 
-                                                        showProgression(add_student_from_management_login.this,"Uploading Image......","").dismiss();
-                                                        showProgression(add_student_from_management_login.this,"Creating User......","").show();
+                                                            String Url = uri.toString().trim();
 
-                                                        String Url = uri.toString().trim();
+                                                            Model_class model_class = new Model_class(address, duration_from_date, duration_to_date
+                                                                    , email_id, radioSexButton.getText().toString().trim(), workerType.getText().toString().trim(), name, college, project_name, phone_number, Url);
+                                                            db.collection("Users").document(user_add_Uid).set(model_class).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    create_user_progression.dismiss();
+                                                                    new AlertDialog.Builder(
+                                                                            add_student_from_management_login.this)
+                                                                            .setTitle(R.string.success)
+                                                                            .setMessage("Account for " + name + " is created successfully.")
+                                                                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                                                @Override
+                                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                                    startActivity(new Intent(add_student_from_management_login.this, Management.class));
+                                                                                    finish();
+                                                                                }
+                                                                            })
+                                                                            .show();
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            });
 
-                                                        Model_class  model_class = new Model_class(address, duration_from_date, duration_to_date
-                                                                ,email_id, radioSexButton.getText().toString().trim() , workerType.getText().toString().trim() ,name, college, project_name, phone_number,Url);
-                                                        db.collection("Users").document(user_add_Uid).set(model_class).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                showProgression(add_student_from_management_login.this,"Creating User......","").dismiss();
-                                                                new AlertDialog.Builder(
-                                                                        add_student_from_management_login.this)
-                                                                        .setTitle(R.string.success)
-                                                                        .setMessage("Account for "+name+" is created successfully.")
-                                                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                                                            @Override
-                                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                                startActivity(new Intent(add_student_from_management_login.this, Management.class));
-                                                                                finish();
-                                                                            }
-                                                                        })
-                                                                        .show();
-                                                            }
-                                                        });
-                                                    }
-                                                });
-                                            }
-                                        });
-                                        usera.signOut();
                                     } else {
                                         Toast.makeText(add_student_from_management_login.this, "User not created",
                                                 Toast.LENGTH_SHORT).show();
@@ -276,6 +278,11 @@ public class add_student_from_management_login extends BaseActivity {
                                     }
                                 }
                             });
+                }else{
+                    showAlertDialog("Take Profile Picture",
+                            add_student_from_management_login.this,"",
+                            "OK");
+                }
                 } else {
                     new_user_phone_number.setError("Invalid Phone Number.");
                 }

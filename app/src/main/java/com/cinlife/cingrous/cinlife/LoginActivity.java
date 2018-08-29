@@ -3,10 +3,12 @@ package com.cinlife.cingrous.cinlife;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,6 +23,9 @@ import java.util.Map;
 
 public class LoginActivity extends BaseActivity {
 
+    RelativeLayout myLayout;
+    AnimationDrawable animationDrawable;
+
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private EditText email_from_login, password_from_login;
@@ -30,6 +35,12 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        myLayout = findViewById(R.id.myLayout);
+        animationDrawable = (AnimationDrawable) myLayout.getBackground();
+        animationDrawable.setEnterFadeDuration(3500);
+        animationDrawable.setExitFadeDuration(3500);
+        animationDrawable.start();
 
         mAuth = FirebaseAuth.getInstance();
 

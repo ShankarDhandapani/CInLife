@@ -36,7 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Student extends AppCompatActivity {
+public class Student extends BaseActivity {
 
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -187,7 +187,6 @@ public class Student extends AppCompatActivity {
             if (result.getContents() == null) {
                 Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
             } else {
-
                 Date date = new Date();
                 @SuppressLint("SimpleDateFormat") DateFormat timeFormat = new SimpleDateFormat("h:mm a");
                 @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy");
@@ -200,7 +199,7 @@ public class Student extends AppCompatActivity {
                 //show dialogue with result
                 final Map<String, Object> user = new HashMap<>();
                 if(result.getContents().equals("cingrous_in")){
-
+                    showProgression(Student.this,"Loading","");
                     user.put("in_time", formattedTime);
                     db.collection(year).document(month).collection(date1).document(mAuth.getUid()).set(user);
 
@@ -209,9 +208,9 @@ public class Student extends AppCompatActivity {
                             .setMessage("In Time : "+formattedTime)
                             .setPositiveButton("Done",null)
                             .show();
-
                 }
-                if(result.getContents().equals("cingrous_out")){
+
+                if(result.getContents().equals("cingrous_out")) {
                     LayoutInflater inflater = getLayoutInflater();
                     @SuppressLint("InflateParams") final View customView = inflater.inflate(R.layout.todays_task_activity, null);
                     final ViewGroup parent = (ViewGroup) customView.getParent();
@@ -228,25 +227,26 @@ public class Student extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
 
-                            if(activity_content.length() > 10){
-                                String activity_done = activity_content.getText().toString().trim();
+                            if (activity_content.length() > 10) {
+                                final String activity_done = activity_content.getText().toString().trim();
                                 user.put("out_time", formattedTime);
                                 user.put("activity", activity_done);
                                 db.collection(year).document(month).collection(date1).document(mAuth.getUid()).update(user);
                                 new AlertDialog.Builder(
                                         Student.this)
-                                        .setMessage("Out Time : "+formattedTime+"\n Activity : "+activity_done)
-                                        .setPositiveButton("Done",null)
+                                        .setMessage("Out Time : " + formattedTime + "\n Activity : " + activity_done)
+                                        .setPositiveButton("Done", null)
                                         .show();
                                 dialog.dismiss();
-                            }else {
+                            } else {
                                 activity_content.setError("This field should contain minimum of 10 characters");
                             }
                         }
                     });
+                }
 
                 }
             }
-        } else { super.onActivityResult(requestCode, resultCode, data); }
+         else { super.onActivityResult(requestCode, resultCode, data); }
     }
 }
