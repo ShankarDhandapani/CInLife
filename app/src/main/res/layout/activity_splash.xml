@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryText"
+    android:background="@drawable/my_bg_anim"
     tools:context=".SplashActivity">
 
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:text="@string/app_name"
             android:textAlignment="center"
-            android:textColor="@color/colorAccentDark"
+            android:textColor="#ffff"
             android:textSize="50sp"
             app:fontFamily="@font/carter_one" />
 
