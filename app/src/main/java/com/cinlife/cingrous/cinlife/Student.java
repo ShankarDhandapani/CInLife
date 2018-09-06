@@ -1,8 +1,10 @@
 package com.cinlife.cingrous.cinlife;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
@@ -21,11 +23,16 @@ import android.widget.Toast;
 
 import com.cinlife.cingrous.cinlife.model.Model_class;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.squareup.picasso.Picasso;
@@ -48,6 +55,7 @@ public class Student extends BaseActivity {
         setTitle(getString(R.string.student));
 
         mAuth = FirebaseAuth.getInstance();
+
 
         Task<DocumentSnapshot> documentSnapshotTask = db.collection("Users").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -160,7 +168,6 @@ public class Student extends BaseActivity {
         phoneNumberDisplay.setText(model_class.getPhone());
     }
 
-
     private void logout() {
         AlertDialog alertDialog = new AlertDialog.Builder(
                 Student.this)
@@ -193,21 +200,68 @@ public class Student extends BaseActivity {
                 final String formattedTime = timeFormat.format(date.getTime());
                 final String formattedDate = dateFormat.format(date.getTime());
 
+                final String Uid = mAuth.getUid();
                 String[] input = formattedDate.split("-");
                 final String year = input[2], month = input[1], date1 = input[0];
-
+                CollectionReference DbYear = db.collection(year);
+                final DocumentReference DbMonth = DbYear.document(month);
+                final CollectionReference DbDate = DbMonth.collection(date1);
+                assert Uid != null;
+                final DocumentReference DbUid = DbDate.document(Uid);
                 //show dialogue with result
                 final Map<String, Object> user = new HashMap<>();
-                if(result.getContents().equals("cingrous_in")){
-                    showProgression(Student.this,"Loading","");
-                    user.put("in_time", formattedTime);
-                    db.collection(year).document(month).collection(date1).document(mAuth.getUid()).set(user);
 
-                    AlertDialog alertDialog = new AlertDialog.Builder(
-                            Student.this)
-                            .setMessage("In Time : "+formattedTime)
-                            .setPositiveButton("Done",null)
-                            .show();
+                if(result.getContents().equals("cingrous_in")){
+                    user.put("in_time", formattedTime);
+                    DbYear.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            try {
+                                DbMonth.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        try {
+                                            DbDate.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    try {
+                                                        DbUid.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                try {
+                                                                    Map<String, Object> InTimeData = task.getResult().getData();
+                                                                    assert InTimeData != null;
+                                                                    showAlertDialog("You are already in Cingrous from "
+                                                                                    + InTimeData.get("in_time") + " Onwards."
+                                                                            , Student.this, "", "Done");
+                                                                }catch (NullPointerException e) {
+                                                                    DbUid.set(user);
+                                                                    showAlertDialog("In Time : "+formattedTime
+                                                                            ,Student.this,"","Done");
+                                                                }
+                                                            }
+                                                        });
+                                                    }catch (NullPointerException e) {
+                                                        DbUid.set(user);
+                                                        showAlertDialog("In Time : "+formattedTime
+                                                                ,Student.this,"","Done");
+                                                    }
+                                                }
+                                            });
+                                        }catch (NullPointerException e) {
+                                            DbUid.set(user);
+                                            showAlertDialog("In Time : "+formattedTime
+                                                    ,Student.this,"","Done");
+                                        }
+                                    }
+                                });
+                            }catch (NullPointerException e) {
+                                DbUid.set(user);
+                                showAlertDialog("In Time : "+formattedTime
+                                        ,Student.this,"","Done");
+                            }
+                        }
+                    });
                 }
 
                 if(result.getContents().equals("cingrous_out")) {
@@ -231,13 +285,10 @@ public class Student extends BaseActivity {
                                 final String activity_done = activity_content.getText().toString().trim();
                                 user.put("out_time", formattedTime);
                                 user.put("activity", activity_done);
-                                db.collection(year).document(month).collection(date1).document(mAuth.getUid()).update(user);
-                                new AlertDialog.Builder(
-                                        Student.this)
-                                        .setMessage("Out Time : " + formattedTime + "\n Activity : " + activity_done)
-                                        .setPositiveButton("Done", null)
-                                        .show();
+                                db.collection(year).document(month).collection(date1).document(Uid).update(user);
                                 dialog.dismiss();
+                                showAlertDialog("Out Time : " + formattedTime + "\n Activity : " + activity_done
+                                        ,Student.this,"","Done");
                             } else {
                                 activity_content.setError("This field should contain minimum of 10 characters");
                             }

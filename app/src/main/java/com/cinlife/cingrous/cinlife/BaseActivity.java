@@ -46,8 +46,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                 context)
                 .setTitle(title)
                 .setMessage(message)
+                .setCancelable(false)
                 .setNegativeButton(button_text, null)
                 .show();
+
     }
 
 }

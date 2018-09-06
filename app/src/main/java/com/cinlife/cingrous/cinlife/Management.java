@@ -203,7 +203,7 @@ public class Management extends BaseActivity {
                         Toast.makeText(Management.this,entry_on,Toast.LENGTH_SHORT).show();
 
                         db.collection(year).document(month).collection(date).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            public Map<String, Object> name_map;
+                            Map<String, Object> name_map;
 
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -212,8 +212,6 @@ public class Management extends BaseActivity {
                                 for(QueryDocumentSnapshot document : task.getResult()){
                                     Map<String, Object> entry = document.getData();
                                     String userId = document.getId();
-
-
 
                                     expandableListContent.clear();
                                     expandableListContent.add("In Time : "+entry.get("in_time"));
