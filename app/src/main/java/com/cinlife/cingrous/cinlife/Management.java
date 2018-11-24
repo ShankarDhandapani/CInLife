@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,6 +36,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 public class Management extends BaseActivity {
 
@@ -46,7 +46,8 @@ public class Management extends BaseActivity {
     private TextView view_entry_on_text_view;
 
     Date date = new Date();
-    @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy");
+    @SuppressLint("SimpleDateFormat")
+    DateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy");
     String formattedDate = dateFormat.format(date.getTime());
 
     private MyAdapter adapter;
@@ -58,10 +59,11 @@ public class Management extends BaseActivity {
         setTitle(getString(R.string.management));
 
         mAuth = FirebaseAuth.getInstance();
+
         view_entry_on_text_view = findViewById(R.id.view_entry_on_text_view);
         view_entry_on_text_view.setText(formattedDate);
 
-        FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
+        new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -84,21 +86,23 @@ public class Management extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.logout_from_worker_dash:
                 logout();
                 return true;
             case R.id.add_student:
-                startActivity(new Intent(Management.this,add_student_from_management_login.class));
+                startActivity(new Intent(Management.this, add_student_from_management_login.class));
+                finish();
                 return true;
             case R.id.profile_from_management_dash:
-                Task<DocumentSnapshot> documentSnapshotTask = db.collection("Users").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                db.collection("Users").document(Objects.requireNonNull(mAuth.getUid())).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
+                            assert document != null;
                             if (document.exists()) {
-                                Model_class model_class = new Model_class(document.getData());
+                                Model_class model_class = new Model_class(Objects.requireNonNull(document.getData()));
                                 view_profile(model_class);
                             }
                         }
@@ -113,10 +117,8 @@ public class Management extends BaseActivity {
     private void view_profile(Model_class model_class) {
 
         LayoutInflater inflater = getLayoutInflater();
-        @SuppressLint("InflateParams") final View customView = inflater.inflate(R.layout.activity_profile_view,null);
-        final ViewGroup parent = (ViewGroup) customView.getParent();
-
-        ImageView profilePictureDisplay = (ImageView) customView.findViewById(R.id.user_profile_picture_at_student_or_management_login);
+        @SuppressLint("InflateParams") final View customView = inflater.inflate(R.layout.activity_profile_view, null);
+        ImageView profilePictureDisplay = customView.findViewById(R.id.user_profile_picture_at_student_or_management_login);
 
         Picasso.with(this)
                 .load(model_class.getProfilePicture())
@@ -152,7 +154,7 @@ public class Management extends BaseActivity {
     }
 
     private void logout() {
-        AlertDialog alertDialog = new AlertDialog.Builder(
+        new AlertDialog.Builder(
                 Management.this)
                 .setTitle(R.string.logout)
                 .setMessage("Are you sure.Do you want to Logout?")
@@ -185,12 +187,12 @@ public class Management extends BaseActivity {
                     public void onDateSet(DatePicker view, int years,
                                           int monthOfYear, int dayOfMonth) {
 
-                        String date = dayOfMonth+"";
-                        String month = ""+(monthOfYear + 1);
-                        String year =  years+"";
-                        String entry_on = date+"-"+month+"-"+year;
+                        String date = dayOfMonth + "";
+                        String month = "" + (monthOfYear + 1);
+                        String year = years + "";
+                        String entry_on = date + "-" + month + "-" + year;
                         view_entry_on_text_view.setText(entry_on);
-                        Toast.makeText(Management.this,entry_on,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Management.this, entry_on, Toast.LENGTH_SHORT).show();
 
                         Query action_query = db.collection(year).document(month).collection(date).limit(50);
                         FirestoreRecyclerOptions<Employee_Entry> options = new FirestoreRecyclerOptions.Builder<Employee_Entry>()

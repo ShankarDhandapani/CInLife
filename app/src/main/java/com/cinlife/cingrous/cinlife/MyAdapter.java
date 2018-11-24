@@ -11,8 +11,8 @@ import com.cinlife.cingrous.cinlife.model.Employee_Entry;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-class MyAdapter extends FirestoreRecyclerAdapter<Employee_Entry, MyAdapter.ViewHolder>{
-    public MyAdapter(FirestoreRecyclerOptions<Employee_Entry> options)  {
+class MyAdapter extends FirestoreRecyclerAdapter<Employee_Entry, MyAdapter.ViewHolder> {
+    MyAdapter(FirestoreRecyclerOptions<Employee_Entry> options) {
         super(options);
     }
 
@@ -31,11 +31,11 @@ class MyAdapter extends FirestoreRecyclerAdapter<Employee_Entry, MyAdapter.ViewH
         return new ViewHolder(view);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView in_time, out_time, activity, employee_name;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             employee_name = itemView.findViewById(R.id.employee_Id_at_each_card);
             in_time = itemView.findViewById(R.id.in_time_at_each_card_view);

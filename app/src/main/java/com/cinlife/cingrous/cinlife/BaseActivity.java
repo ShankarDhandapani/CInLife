@@ -2,9 +2,6 @@ package com.cinlife.cingrous.cinlife;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -19,7 +16,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState, persistentState);
     }
 
-    public ProgressDialog showProgression(Context context,String message,String title){
+    public ProgressDialog showProgression(Context context, String message, String title) {
         ProgressDialog progressDoalog = new ProgressDialog(context);
         progressDoalog.setMessage(message);
         progressDoalog.setTitle(title);
@@ -35,13 +32,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         return netInfo != null && netInfo.isConnected();
     }
 
-    protected boolean isGPSEnabled(){
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-        return manager.isProviderEnabled( LocationManager.GPS_PROVIDER);
-    }
 
-
-    public void showAlertDialog(String message, Context context,String title,String button_text){
+    public void showAlertDialog(String message, Context context, String title, String button_text) {
         new AlertDialog.Builder(
                 context)
                 .setTitle(title)

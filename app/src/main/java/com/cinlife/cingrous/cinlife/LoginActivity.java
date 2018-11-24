@@ -1,7 +1,5 @@
 package com.cinlife.cingrous.cinlife;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -20,6 +18,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class LoginActivity extends BaseActivity {
 
@@ -29,7 +28,7 @@ public class LoginActivity extends BaseActivity {
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private EditText email_from_login, password_from_login;
-    String email,pass;
+    String email, pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,7 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                showProgression(LoginActivity.this,"Logging In......","").show();
+                                showProgression(LoginActivity.this, "Logging In......", "").show();
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 assert user != null;
                                 updateUI(user);
@@ -70,7 +69,7 @@ public class LoginActivity extends BaseActivity {
                         }
                     });
 
-                }else {
+                } else {
                     Toast.makeText(LoginActivity.this, "Email and Password can't be empty", Toast.LENGTH_LONG).show();
                 }
             }
@@ -81,7 +80,7 @@ public class LoginActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentuser = mAuth.getCurrentUser();
-        if(currentuser != null)
+        if (currentuser != null)
             updateUI(currentuser);
     }
 
@@ -90,17 +89,18 @@ public class LoginActivity extends BaseActivity {
         db.collection("Users").document(Uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    assert document != null;
                     if (document.exists()) {
                         Map<String, Object> data = document.getData();
                         assert data != null;
-                        if(data.get("worker_type").equals("Manager")) {
+                        if (Objects.equals(data.get("worker_type"), "Manager")) {
                             startActivity(new Intent(LoginActivity.this, Management.class));
                             finish();
                             Toast.makeText(LoginActivity.this, "Management Login", Toast.LENGTH_LONG).show();
                         }
-                        if(data.get("worker_type").equals("Employee")){
+                        if (Objects.equals(data.get("worker_type"), "Employee")) {
                             startActivity(new Intent(LoginActivity.this, Student.class));
                             finish();
                             Toast.makeText(LoginActivity.this, "Worker Login", Toast.LENGTH_LONG).show();
@@ -109,6 +109,6 @@ public class LoginActivity extends BaseActivity {
                 }
             }
         });
-        showProgression(LoginActivity.this,"Logging In......","").dismiss();
+        showProgression(LoginActivity.this, "Logging In......", "").dismiss();
     }
 }

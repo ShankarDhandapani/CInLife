@@ -1,21 +1,17 @@
 package com.cinlife.cingrous.cinlife;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,11 +19,8 @@ import android.widget.Toast;
 
 import com.cinlife.cingrous.cinlife.model.Model_class;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -42,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Student extends BaseActivity {
 
@@ -55,15 +49,14 @@ public class Student extends BaseActivity {
         setTitle(getString(R.string.student));
 
         mAuth = FirebaseAuth.getInstance();
-
-
-        Task<DocumentSnapshot> documentSnapshotTask = db.collection("Users").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("Users").document(Objects.requireNonNull(mAuth.getUid())).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    assert document != null;
                     if (document.exists()) {
-                        Model_class model_class = new Model_class(document.getData());
+                        Model_class model_class = new Model_class(Objects.requireNonNull(document.getData()));
                         set_profile(model_class);
                     }
                 }
@@ -102,18 +95,19 @@ public class Student extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.logout_from_worker_dash:
                 logout();
                 return true;
             case R.id.profile_from_worker_dash:
-                Task<DocumentSnapshot> documentSnapshotTask = db.collection("Users").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                db.collection("Users").document(Objects.requireNonNull(mAuth.getUid())).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
+                            assert document != null;
                             if (document.exists()) {
-                                Model_class model_class = new Model_class(document.getData());
+                                Model_class model_class = new Model_class(Objects.requireNonNull(document.getData()));
                                 view_profile(model_class);
                             }
                         }
@@ -126,14 +120,12 @@ public class Student extends BaseActivity {
     }
 
 
-
     private void view_profile(Model_class model_class) {
 
         LayoutInflater inflater = getLayoutInflater();
-        @SuppressLint("InflateParams") final View customView = inflater.inflate(R.layout.activity_profile_view,null);
-        final ViewGroup parent = (ViewGroup) customView.getParent();
+        @SuppressLint("InflateParams") final View customView = inflater.inflate(R.layout.activity_profile_view, null);
 
-        ImageView profilePictureDisplay = (ImageView) customView.findViewById(R.id.user_profile_picture_at_student_or_management_login);
+        ImageView profilePictureDisplay = customView.findViewById(R.id.user_profile_picture_at_student_or_management_login);
 
         Picasso.with(this)
                 .load(model_class.getProfilePicture())
@@ -169,7 +161,7 @@ public class Student extends BaseActivity {
     }
 
     private void logout() {
-        AlertDialog alertDialog = new AlertDialog.Builder(
+        new AlertDialog.Builder(
                 Student.this)
                 .setTitle(R.string.logout)
                 .setMessage("Are you sure.Do you want to Logout?")
@@ -211,7 +203,7 @@ public class Student extends BaseActivity {
                 //show dialogue with result
                 final Map<String, Object> user = new HashMap<>();
 
-                if(result.getContents().equals("cingrous_in")){
+                if (result.getContents().equals("cingrous_in")) {
                     user.put("in_time", formattedTime);
                     DbYear.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -229,45 +221,44 @@ public class Student extends BaseActivity {
                                                             @Override
                                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                                 try {
-                                                                    Map<String, Object> InTimeData = task.getResult().getData();
+                                                                    Map<String, Object> InTimeData = Objects.requireNonNull(task.getResult()).getData();
                                                                     assert InTimeData != null;
                                                                     showAlertDialog("You are already in Cingrous from "
                                                                                     + InTimeData.get("in_time") + " Onwards."
                                                                             , Student.this, "", "Done");
-                                                                }catch (NullPointerException e) {
+                                                                } catch (NullPointerException e) {
                                                                     DbUid.set(user);
-                                                                    showAlertDialog("In Time : "+formattedTime
-                                                                            ,Student.this,"","Done");
+                                                                    showAlertDialog("In Time : " + formattedTime
+                                                                            , Student.this, "", "Done");
                                                                 }
                                                             }
                                                         });
-                                                    }catch (NullPointerException e) {
+                                                    } catch (NullPointerException e) {
                                                         DbUid.set(user);
-                                                        showAlertDialog("In Time : "+formattedTime
-                                                                ,Student.this,"","Done");
+                                                        showAlertDialog("In Time : " + formattedTime
+                                                                , Student.this, "", "Done");
                                                     }
                                                 }
                                             });
-                                        }catch (NullPointerException e) {
+                                        } catch (NullPointerException e) {
                                             DbUid.set(user);
-                                            showAlertDialog("In Time : "+formattedTime
-                                                    ,Student.this,"","Done");
+                                            showAlertDialog("In Time : " + formattedTime
+                                                    , Student.this, "", "Done");
                                         }
                                     }
                                 });
-                            }catch (NullPointerException e) {
+                            } catch (NullPointerException e) {
                                 DbUid.set(user);
-                                showAlertDialog("In Time : "+formattedTime
-                                        ,Student.this,"","Done");
+                                showAlertDialog("In Time : " + formattedTime
+                                        , Student.this, "", "Done");
                             }
                         }
                     });
                 }
 
-                if(result.getContents().equals("cingrous_out")) {
+                if (result.getContents().equals("cingrous_out")) {
                     LayoutInflater inflater = getLayoutInflater();
                     @SuppressLint("InflateParams") final View customView = inflater.inflate(R.layout.todays_task_activity, null);
-                    final ViewGroup parent = (ViewGroup) customView.getParent();
                     final TextInputEditText activity_content = customView.findViewById(R.id.today_s_activity_content_at_out_qr_code_found);
                     Button submit_btn = customView.findViewById(R.id.today_s_activity_submit_button_at_out_qr_code_found);
 
@@ -282,13 +273,13 @@ public class Student extends BaseActivity {
                         public void onClick(View view) {
 
                             if (activity_content.length() > 10) {
-                                final String activity_done = activity_content.getText().toString().trim();
+                                final String activity_done = Objects.requireNonNull(activity_content.getText()).toString().trim();
                                 user.put("out_time", formattedTime);
                                 user.put("activity", activity_done);
                                 db.collection(year).document(month).collection(date1).document(Uid).update(user);
                                 dialog.dismiss();
                                 showAlertDialog("Out Time : " + formattedTime + "\n Activity : " + activity_done
-                                        ,Student.this,"","Done");
+                                        , Student.this, "", "Done");
                             } else {
                                 activity_content.setError("This field should contain minimum of 10 characters");
                             }
@@ -296,8 +287,9 @@ public class Student extends BaseActivity {
                     });
                 }
 
-                }
             }
-         else { super.onActivityResult(requestCode, resultCode, data); }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

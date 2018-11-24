@@ -18,6 +18,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,6 +35,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,26 +47,26 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
+import java.util.Objects;
 
 public class add_student_from_management_login extends BaseActivity {
 
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 100;
 
-    private int from_mYear, from_mMonth, from_mDay, to_mYear, to_mMonth, to_mDay;
     TextView date_from, date_to;
 
-    FirebaseAuth mAuth;
-    TextInputEditText new_user_name,new_user_address,new_user_phone_number,new_user_email,new_user_password,
-            new_user_confirm_password,college_name,name_of_the_project;
-    String name,address,phone_number,email_id,password,confirm_password,duration_from_date,duration_to_date,
-            worker_type,college,project_name, user_add_Uid;
-    TextView new_user_duration_from_date,new_user_duration_to_date;
+    FirebaseAuth mAuth, mAuth1;
+    TextInputEditText new_user_name, new_user_address, new_user_phone_number, new_user_email, new_user_password,
+            new_user_confirm_password, college_name, name_of_the_project;
+    String name, address, phone_number, email_id, password, confirm_password, duration_from_date, duration_to_date,
+            worker_type, college, project_name, user_add_Uid;
+    TextView new_user_duration_from_date, new_user_duration_to_date;
     TextInputLayout new_user_confirm_password_layout;
     ImageButton mImageView;
 
     private StorageReference mStorageRef;
 
-    RadioGroup gender,worker_Type;
+    RadioGroup gender, worker_Type;
     Bitmap imageBitmap;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -79,6 +82,26 @@ public class add_student_from_management_login extends BaseActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         mAuth = FirebaseAuth.getInstance();
+        Log.d("Click", mAuth.getApp() + "");
+
+
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setApiKey("AIzaSyCAHn6f8NQ_-Rd50RhgtX30xo_WPUTrnlQ")
+                .setDatabaseUrl("https://cinlife-b16ef.firebaseio.com")
+                .setStorageBucket("cinlife-b16ef.appspot.com")
+                .setProjectId("cinlife-b16ef")
+                .setApplicationId("1:542872182458:android:b1af22c6af3f33c9")
+                .build();
+
+
+        try {
+            FirebaseApp myApp = FirebaseApp.initializeApp(getApplicationContext(), options, "RegisterApp");
+            mAuth1 = FirebaseAuth.getInstance(myApp);
+        } catch (Exception e) {
+            mAuth1 = FirebaseAuth.getInstance(FirebaseApp.getInstance("RegisterApp"));
+        }
+
+        Log.d("Reg: ", "" + mAuth1.getApp());
 
         date_from = findViewById(R.id.date_from_from_add_details);
         date_to = findViewById(R.id.date_to_from_add_details);
@@ -99,9 +122,9 @@ public class add_student_from_management_login extends BaseActivity {
 
     public void from_date_selector(View view) {
         final Calendar c = Calendar.getInstance();
-        from_mYear = c.get(Calendar.YEAR);
-        from_mMonth = c.get(Calendar.MONTH);
-        from_mDay = c.get(Calendar.DAY_OF_MONTH);
+        int from_mYear = c.get(Calendar.YEAR);
+        int from_mMonth = c.get(Calendar.MONTH);
+        int from_mDay = c.get(Calendar.DAY_OF_MONTH);
 
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
@@ -123,9 +146,9 @@ public class add_student_from_management_login extends BaseActivity {
 
     public void to_date_selector(View view) {
         final Calendar c = Calendar.getInstance();
-        to_mYear = c.get(Calendar.YEAR);
-        to_mMonth = c.get(Calendar.MONTH);
-        to_mDay = c.get(Calendar.DAY_OF_MONTH);
+        int to_mYear = c.get(Calendar.YEAR);
+        int to_mMonth = c.get(Calendar.MONTH);
+        int to_mDay = c.get(Calendar.DAY_OF_MONTH);
 
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
@@ -155,7 +178,7 @@ public class add_student_from_management_login extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.cancel_option_at_add_worker_activity:
                 cancel_btn();
                 return true;
@@ -190,35 +213,36 @@ public class add_student_from_management_login extends BaseActivity {
         int selectId = worker_Type.getCheckedRadioButtonId();
         final RadioButton workerType = findViewById(selectId);
 
-        name = new_user_name.getText().toString().trim();
-        address = new_user_address.getText().toString().trim();
-        phone_number = new_user_phone_number.getText().toString().trim();
-        email_id = new_user_email.getText().toString().trim();
-        password = new_user_password.getText().toString().trim();
-        confirm_password = new_user_confirm_password.getText().toString().trim();
+        name = Objects.requireNonNull(new_user_name.getText()).toString().trim();
+        address = Objects.requireNonNull(new_user_address.getText()).toString().trim();
+        phone_number = Objects.requireNonNull(new_user_phone_number.getText()).toString().trim();
+        email_id = Objects.requireNonNull(new_user_email.getText()).toString().trim();
+        password = Objects.requireNonNull(new_user_password.getText()).toString().trim();
+        confirm_password = Objects.requireNonNull(new_user_confirm_password.getText()).toString().trim();
         duration_from_date = new_user_duration_from_date.getText().toString().trim();
         duration_to_date = new_user_duration_to_date.getText().toString().trim();
-        college = college_name.getText().toString().trim();
-        project_name = name_of_the_project.getText().toString().trim();
+        college = Objects.requireNonNull(college_name.getText()).toString().trim();
+        project_name = Objects.requireNonNull(name_of_the_project.getText()).toString().trim();
 
-        if(!name.equals("") && !address.equals("") && !phone_number.equals("") && !email_id.equals("")
+        if (!name.equals("") && !address.equals("") && !phone_number.equals("") && !email_id.equals("")
                 && !password.equals("") && !confirm_password.equals("") && !duration_from_date.equals("DD/MM/YYYY")
                 && !duration_to_date.equals("DD/MM/YYYY") && !college.equals("") && !project_name.equals("")
                 && !workerType.getText().toString().trim().equals("") && !radioSexButton.getText().toString().trim().equals("")) {
             if (password.equals(confirm_password)) {
                 if (phone_number.length() == 10) {
-                    if(imageBitmap != null){
-                    mAuth.createUserWithEmailAndPassword(email_id, password)
-                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        FirebaseUser auth = task.getResult().getUser();
-                                        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                        user_add_Uid = auth.getUid();
+                    if (imageBitmap != null) {
+                        mAuth1.createUserWithEmailAndPassword(email_id, password)
+                                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            mAuth1.signOut();
+                                            FirebaseUser auth = Objects.requireNonNull(task.getResult()).getUser();
+                                            final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                            user_add_Uid = auth.getUid();
 
-                                        final ProgressDialog uploading_image_progression = showProgression(add_student_from_management_login.this, "Uploading Image......", "");
-                                        uploading_image_progression.show();
+                                            final ProgressDialog uploading_image_progression = showProgression(add_student_from_management_login.this, "Uploading Image......", "");
+                                            uploading_image_progression.show();
                                             final StorageReference mountainImagesRef = mStorageRef.child("Profile Picture/" + user_add_Uid + ".jpg");
                                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
                                             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
@@ -271,18 +295,18 @@ public class add_student_from_management_login extends BaseActivity {
                                                 }
                                             });
 
-                                    } else {
-                                        Toast.makeText(add_student_from_management_login.this, "User not created",
-                                                Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(add_student_from_management_login.this, "User not created",
+                                                    Toast.LENGTH_SHORT).show();
 
+                                        }
                                     }
-                                }
-                            });
-                }else{
-                    showAlertDialog("Take Profile Picture",
-                            add_student_from_management_login.this,"",
-                            "OK");
-                }
+                                });
+                    } else {
+                        showAlertDialog("Take Profile Picture",
+                                add_student_from_management_login.this, "",
+                                "OK");
+                    }
                 } else {
                     new_user_phone_number.setError("Invalid Phone Number.");
                 }
@@ -290,8 +314,8 @@ public class add_student_from_management_login extends BaseActivity {
                 new_user_confirm_password_layout.setError("Password does not match");
 
             }
-        }else{
-            showAlertDialog("Every Fields are Required",add_student_from_management_login.this, "Error", "OK");
+        } else {
+            showAlertDialog("Every Fields are Required", add_student_from_management_login.this, "Error", "OK");
         }
     }
 
@@ -306,7 +330,7 @@ public class add_student_from_management_login extends BaseActivity {
                     new String[]{Manifest.permission.CAMERA},
                     MY_PERMISSIONS_REQUEST_CAMERA);
 
-        }else{
+        } else {
 
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
