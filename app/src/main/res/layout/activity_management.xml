@@ -51,7 +51,12 @@
         android:layout_height="match_parent"
         android:layout_weight="50">
 
-        <ExpandableListView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_at_management_login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!--<ExpandableListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/expandable_user_view_at_management_activity"
@@ -59,7 +64,7 @@
             android:divider="@android:color/darker_gray"
             android:dividerHeight="0.5dp">
 
-        </ExpandableListView>
+        </ExpandableListView>-->
 
     </LinearLayout>
 
