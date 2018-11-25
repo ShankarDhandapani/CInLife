@@ -1,6 +1,7 @@
 package com.cinlife.cingrous.cinlife;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -178,6 +179,8 @@ public class Student extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
         //We will get scan results here
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
@@ -186,6 +189,8 @@ public class Student extends BaseActivity {
             if (result.getContents() == null) {
                 Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
             } else {
+                final ProgressDialog progressbar = showProgression(Student.this, "Loading...", "");
+                progressbar.show();
                 Date date = new Date();
                 @SuppressLint("SimpleDateFormat") DateFormat timeFormat = new SimpleDateFormat("h:mm a");
                 @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy");
@@ -223,11 +228,13 @@ public class Student extends BaseActivity {
                                                                 try {
                                                                     Map<String, Object> InTimeData = Objects.requireNonNull(task.getResult()).getData();
                                                                     assert InTimeData != null;
+                                                                    progressbar.dismiss();
                                                                     showAlertDialog("You are already in Cingrous from "
                                                                                     + InTimeData.get("in_time") + " Onwards."
                                                                             , Student.this, "", "Done");
                                                                 } catch (NullPointerException e) {
                                                                     DbUid.set(user);
+                                                                    progressbar.dismiss();
                                                                     showAlertDialog("In Time : " + formattedTime
                                                                             , Student.this, "", "Done");
                                                                 }
@@ -235,6 +242,7 @@ public class Student extends BaseActivity {
                                                         });
                                                     } catch (NullPointerException e) {
                                                         DbUid.set(user);
+                                                        progressbar.dismiss();
                                                         showAlertDialog("In Time : " + formattedTime
                                                                 , Student.this, "", "Done");
                                                     }
@@ -242,6 +250,7 @@ public class Student extends BaseActivity {
                                             });
                                         } catch (NullPointerException e) {
                                             DbUid.set(user);
+                                            progressbar.dismiss();
                                             showAlertDialog("In Time : " + formattedTime
                                                     , Student.this, "", "Done");
                                         }
@@ -249,6 +258,7 @@ public class Student extends BaseActivity {
                                 });
                             } catch (NullPointerException e) {
                                 DbUid.set(user);
+                                progressbar.dismiss();
                                 showAlertDialog("In Time : " + formattedTime
                                         , Student.this, "", "Done");
                             }
@@ -278,6 +288,7 @@ public class Student extends BaseActivity {
                                 user.put("activity", activity_done);
                                 db.collection(year).document(month).collection(date1).document(Uid).update(user);
                                 dialog.dismiss();
+                                progressbar.dismiss();
                                 showAlertDialog("Out Time : " + formattedTime + "\n Activity : " + activity_done
                                         , Student.this, "", "Done");
                             } else {

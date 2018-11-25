@@ -50,6 +50,9 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
+                showProgression(LoginActivity.this, "Logging In......", "").show();
+
+
                 email = email_from_login.getText().toString().trim();
                 pass = password_from_login.getText().toString().trim();
 
@@ -59,7 +62,6 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                showProgression(LoginActivity.this, "Logging In......", "").show();
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 assert user != null;
                                 updateUI(user);

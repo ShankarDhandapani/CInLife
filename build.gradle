@@ -20,7 +20,13 @@ allprojects {
     repositories {
         google()
         jcenter()
+
+        // picasso Snapshots
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+
+        // QR Maven link
+        maven { url 'https://jitpack.io' }
+
     }
 }
 
