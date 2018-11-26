@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "542872182457-p1r0qa7ffe73e3bij9f16sn4d9kahgtb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cinlife.cingrous.cinlife",
+            "certificate_hash": "1126787af74a5c7645b64791da0ac8b4494eb1a8"
+          }
+        },
+        {
           "client_id": "542872182457-s92cegt10987dnvvq6lv3h5g4arr9pj1.apps.googleusercontent.com",
           "client_type": 3
         }

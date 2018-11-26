@@ -16,13 +16,9 @@
     <string name="from">From:</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="email_id">Email Id</string>
-    <string name="phone_number">Phone Number</string>
     <string name="Address">Address</string>
-    <string name="name">Name</string>
     <string name="workerimageview">WorkerImageView</string>
-    <string name="gender">Gender</string>
     <string name="date_pattern_in_duration">DD/MM/YYYY</string>
-    <string name="duration">Duration</string>
     <string name="cancel">Cancel</string>
     <string name="message">Place the QR Code between the Scanner</string>
     <string name="turn_off_flashlight">Turn off Flashlight</string>
@@ -50,4 +46,14 @@
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="view_entry_on">View Entry On</string>
     <string name="type">Worker Type</string>
+    <string name="user_profile_picture">User_Profile_picture</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="gender">Gender</string>
+    <string name="address">Address</string>
+    <string name="name_of_the_college">Name of the College</string>
+    <string name="duration">Duration</string>
+    <string name="activity">Activity:</string>
+    <string name="users_profile">Users Profile</string>
 </resources>

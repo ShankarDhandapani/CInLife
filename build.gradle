@@ -5,6 +5,9 @@ buildscript {
     repositories {
         google()
         jcenter()
+
+        // Crashlytics repositories
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
@@ -12,7 +15,10 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-        classpath 'com.google.gms:google-services:4.0.0'
+        classpath 'com.google.gms:google-services:4.0.2'
+
+        // Add dependency
+        classpath 'io.fabric.tools:gradle:1.26.1'
     }
 }
 
@@ -21,11 +27,17 @@ allprojects {
         google()
         jcenter()
 
+        // google
+        maven { url "https://maven.google.com" }
+
         // picasso Snapshots
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 
         // QR Maven link
         maven { url 'https://jitpack.io' }
+
+        // Crashlytics repositories
+        maven { url 'https://maven.fabric.io/public' }
 
     }
 }

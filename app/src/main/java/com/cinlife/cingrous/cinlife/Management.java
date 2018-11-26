@@ -50,7 +50,7 @@ public class Management extends BaseActivity {
     DateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy");
     String formattedDate = dateFormat.format(date.getTime());
 
-    private MyAdapter adapter;
+    private MyInOutAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +92,10 @@ public class Management extends BaseActivity {
                 return true;
             case R.id.add_student:
                 startActivity(new Intent(Management.this, add_student_from_management_login.class));
+                finish();
+                return true;
+            case R.id.user_profile_from_management_dash:
+                startActivity(new Intent(Management.this, StudentDetailsActivity.class));
                 finish();
                 return true;
             case R.id.profile_from_management_dash:
@@ -199,7 +203,7 @@ public class Management extends BaseActivity {
                                 .setQuery(action_query, Employee_Entry.class)
                                 .build();
 
-                        adapter = new MyAdapter(options);
+                        adapter = new MyInOutAdapter(options);
                         recyclerView.setAdapter(adapter);
                         adapter.startListening();
                     }

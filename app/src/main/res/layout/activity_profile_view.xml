@@ -14,14 +14,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="100"
-        tools:ignore="ScrollViewSize">
+        tools:ignore="ScrollViewSize,UselessParent">
 
         <ImageView
             android:id="@+id/user_profile_picture_at_student_or_management_login"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
-            android:layout_weight="10" />
+            android:layout_weight="10"
+            android:contentDescription="@string/user_profile_picture" />
         <!--name-->
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,8 +35,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
-                android:text="Name "
-                android:textColor="#000000" />
+                android:text="@string/name"
+                android:textColor="#000000"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/Name_of_the_current_user"
@@ -56,8 +58,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
-                android:text="Email "
-                android:textColor="#000000" />
+                android:text="@string/email"
+                android:textColor="#000000"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/Email_id_of_the_current_user"
@@ -78,8 +81,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
-                android:text="Phone Number "
-                android:textColor="#000000" />
+                android:text="@string/phone_number"
+                android:textColor="#000000"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/phone_number_of_the_current_user"
@@ -100,8 +104,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
-                android:text="Gender "
-                android:textColor="#000000" />
+                android:text="@string/gender"
+                android:textColor="#000000"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/gender_of_the_current_user"
@@ -123,7 +128,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
                 android:text="@string/type"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/worker_type_of_the_current_user"
@@ -144,8 +150,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
-                android:text="Address "
-                android:textColor="#000000" />
+                android:text="@string/address"
+                android:textColor="#000000"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/address_of_the_current_user"
@@ -166,8 +173,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
-                android:text="Name of the College "
-                android:textColor="#000000" />
+                android:text="@string/name_of_the_college"
+                android:textColor="#000000"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/name_of_the_college_of_the_current_user"
@@ -188,8 +196,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
-                android:text="Name of the project "
-                android:textColor="#000000" />
+                android:text="@string/name_of_the_project"
+                android:textColor="#000000"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/name_of_the_project_of_the_current_user"
@@ -203,9 +212,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="10"
-            android:text="Duration"
+            android:text="@string/duration"
             android:textColor="#000000"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
         <!--from-to-->
         <LinearLayout
             android:layout_width="match_parent"
@@ -218,8 +227,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
-                android:text="From "
-                android:textColor="#000000" />
+                android:text="@string/from"
+                android:textColor="#000000"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/from_date_of_the_current_user"
@@ -231,7 +241,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
-                android:text="To "
+                android:text="@string/to"
                 android:textColor="#000000" />
 
             <TextView

@@ -11,8 +11,8 @@ import com.cinlife.cingrous.cinlife.model.Employee_Entry;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-class MyAdapter extends FirestoreRecyclerAdapter<Employee_Entry, MyAdapter.ViewHolder> {
-    MyAdapter(FirestoreRecyclerOptions<Employee_Entry> options) {
+class MyInOutAdapter extends FirestoreRecyclerAdapter<Employee_Entry, MyInOutAdapter.ViewHolder> {
+    MyInOutAdapter(FirestoreRecyclerOptions<Employee_Entry> options) {
         super(options);
     }
 

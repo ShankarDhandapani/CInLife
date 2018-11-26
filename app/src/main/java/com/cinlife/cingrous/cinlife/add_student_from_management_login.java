@@ -342,6 +342,11 @@ public class add_student_from_management_login extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        cancel_btn();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();

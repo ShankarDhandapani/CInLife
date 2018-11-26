@@ -264,9 +264,7 @@ public class Student extends BaseActivity {
                             }
                         }
                     });
-                }
-
-                if (result.getContents().equals("cingrous_out")) {
+                }else if (result.getContents().equals("cingrous_out")) {
                     LayoutInflater inflater = getLayoutInflater();
                     @SuppressLint("InflateParams") final View customView = inflater.inflate(R.layout.todays_task_activity, null);
                     final TextInputEditText activity_content = customView.findViewById(R.id.today_s_activity_content_at_out_qr_code_found);
@@ -296,6 +294,9 @@ public class Student extends BaseActivity {
                             }
                         }
                     });
+                }else {
+                    showAlertDialog("please verify your QR Code", Student.this, "Wrong QR Code", "OK");
+                    progressbar.dismiss();
                 }
 
             }

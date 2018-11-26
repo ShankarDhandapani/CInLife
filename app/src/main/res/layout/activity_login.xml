@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/my_bg_anim"
     android:id="@+id/myLayout"
-    tools:context=".LoginActivity"
-    >
+    tools:context=".LoginActivity">
 
     <android.support.v7.widget.CardView
         android:layout_margin="20dp"

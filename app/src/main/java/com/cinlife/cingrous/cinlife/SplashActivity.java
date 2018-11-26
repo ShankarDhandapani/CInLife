@@ -25,6 +25,7 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
 
         if (isOnline()) {
+            checkAndroidPermission();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -57,6 +58,13 @@ public class SplashActivity extends BaseActivity {
         } else {
             showAlertDialog("Please connect to the Internet.", SplashActivity.this, "", "Try Again");
         }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+        System.exit(0);
     }
 
     private void updateUI(String i) {

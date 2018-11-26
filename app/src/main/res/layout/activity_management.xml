@@ -21,7 +21,8 @@
             android:layout_weight="20"
             android:text="@string/view_entry_on"
             android:textColor="@color/colorAccentText"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            tools:ignore="NestedWeights" />
 
         <TextView
             android:id="@+id/view_entry_on_text_view"
@@ -55,16 +56,6 @@
             android:id="@+id/recycler_view_at_management_login"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
-        <!--<ExpandableListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/expandable_user_view_at_management_activity"
-            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
-            android:divider="@android:color/darker_gray"
-            android:dividerHeight="0.5dp">
-
-        </ExpandableListView>-->
 
     </LinearLayout>
 

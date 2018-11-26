@@ -1,12 +1,11 @@
 package com.cinlife.cingrous.cinlife;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -14,6 +13,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -22,24 +22,18 @@ import java.util.Objects;
 
 public class LoginActivity extends BaseActivity {
 
-    RelativeLayout myLayout;
-    AnimationDrawable animationDrawable;
-
     private FirebaseAuth mAuth;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private EditText email_from_login, password_from_login;
-    String email, pass;
+    private String email, pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        myLayout = findViewById(R.id.myLayout);
-        animationDrawable = (AnimationDrawable) myLayout.getBackground();
-        animationDrawable.setEnterFadeDuration(3000);
-        animationDrawable.setExitFadeDuration(3000);
-        animationDrawable.start();
+        FirebaseCrash.log("Activity created");
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -50,29 +44,34 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                showProgression(LoginActivity.this, "Logging In......", "").show();
+                final ProgressDialog progressDialog = showProgression(LoginActivity.this, "Logging In......", "");
+                progressDialog.show();
 
 
                 email = email_from_login.getText().toString().trim();
                 pass = password_from_login.getText().toString().trim();
 
-                if (!email.equals("") && !pass.equals("")) {
+                if (mAuth != null){
+                    if (!email.equals("") && !pass.equals("")) {
 
-                    mAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                assert user != null;
-                                updateUI(user);
-                            } else {
-                                Toast.makeText(LoginActivity.this, "Authentication Failed!!", Toast.LENGTH_LONG).show();
+                        mAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    assert user != null;
+                                    updateUI(user);
+                                } else {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(LoginActivity.this, "Authentication Failed!!", Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                    });
+                        });
 
-                } else {
-                    Toast.makeText(LoginActivity.this, "Email and Password can't be empty", Toast.LENGTH_LONG).show();
+                    } else {
+                        progressDialog.dismiss();
+                        Toast.makeText(LoginActivity.this, "Email and Password can't be empty", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -111,6 +110,5 @@ public class LoginActivity extends BaseActivity {
                 }
             }
         });
-        showProgression(LoginActivity.this, "Logging In......", "").dismiss();
     }
 }

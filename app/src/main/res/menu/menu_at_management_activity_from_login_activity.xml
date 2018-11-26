@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:icon="@drawable/ic_power_settings_new_black_24dp"
-        android:orderInCategory="100"
-        app:showAsAction="always"
-        android:id="@+id/logout_from_worker_dash"
-        android:title="@string/logout" />
-    <item
         android:icon="@drawable/ic_add_circle_outline_black_24dp"
         android:orderInCategory="80"
-        app:showAsAction="always"
         android:id="@+id/add_student"
-        android:title="@string/add_student" />
+        android:title="@string/addUserTitle" />
     <item
         android:icon="@drawable/ic_account_box_black_24dp"
-        app:showAsAction="always"
-        android:orderInCategory="90"
+        android:orderInCategory="70"
         android:id="@+id/profile_from_management_dash"
         android:title="@string/profile" />
-
+    <item
+        android:id="@+id/user_profile_from_management_dash"
+        android:title="@string/users_profile"
+        android:orderInCategory="90" />
+    <item
+        android:icon="@drawable/ic_power_settings_new_black_24dp"
+        android:orderInCategory="100"
+        android:id="@+id/logout_from_worker_dash"
+        android:title="@string/logout" />
 </menu>

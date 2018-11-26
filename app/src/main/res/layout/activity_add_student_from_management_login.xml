@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:baselineAligned="false">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -16,12 +17,13 @@
             android:id="@+id/student_photo_at_add_worker_tab_in_manager_login"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:background="@color/colorPrimaryText"
             android:contentDescription="@string/capture_students_image"
             android:onClick="open_camera"
             android:src="@drawable/add_photo" />
+
         <Button
             android:id="@+id/create_account_button_at_add_worker_tab_in_manager_login"
             android:layout_width="match_parent"
@@ -31,7 +33,7 @@
             android:background="@color/colorPrimary"
             android:onClick="create_user_account"
             android:text="@string/create_account"
-            android:textColor="@color/colorPrimaryText"/>
+            android:textColor="@color/colorPrimaryText" />
 
     </RelativeLayout>
 
@@ -173,8 +175,7 @@
                         android:textColor="@color/colorAccentText"
                         android:textSize="15sp" />
 
-                    <RadioGroup
-                        xmlns:android="http://schemas.android.com/apk/res/android"
+                    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/worker_type_at_add_worker"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -269,7 +270,8 @@
                             android:layout_weight="10"
                             android:text="@string/from"
                             android:textColor="@color/colorAccentText"
-                            android:textSize="15sp" />
+                            android:textSize="15sp"
+                            tools:ignore="NestedWeights" />
 
                         <TextView
                             android:id="@+id/date_from_from_add_details"
@@ -308,7 +310,8 @@
                             android:layout_weight="10"
                             android:text="@string/to"
                             android:textColor="@color/colorAccentText"
-                            android:textSize="15sp" />
+                            android:textSize="15sp"
+                            tools:ignore="NestedWeights" />
 
                         <TextView
                             android:id="@+id/date_to_from_add_details"
