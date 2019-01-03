@@ -1,10 +1,10 @@
 package com.cinlife.cingrous.cinlife.model;
 
 public class Employee_Entry {
-    String in_time;
-    String out_time;
-    String activity;
-    String name;
+    private String in_time;
+    private String out_time;
+    private String activity;
+    private String name;
 
     public Employee_Entry() {
     }

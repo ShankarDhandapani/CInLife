@@ -43,6 +43,8 @@ public class Student extends BaseActivity {
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    Model_class model_class;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +59,7 @@ public class Student extends BaseActivity {
                     DocumentSnapshot document = task.getResult();
                     assert document != null;
                     if (document.exists()) {
-                        Model_class model_class = new Model_class(Objects.requireNonNull(document.getData()));
+                        model_class = new Model_class(Objects.requireNonNull(document.getData()));
                         set_profile(model_class);
                     }
                 }
@@ -193,7 +195,7 @@ public class Student extends BaseActivity {
                 progressbar.show();
                 Date date = new Date();
                 @SuppressLint("SimpleDateFormat") DateFormat timeFormat = new SimpleDateFormat("h:mm a");
-                @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy");
+                @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("d-M-yyyy");
                 final String formattedTime = timeFormat.format(date.getTime());
                 final String formattedDate = dateFormat.format(date.getTime());
 
@@ -208,95 +210,101 @@ public class Student extends BaseActivity {
                 //show dialogue with result
                 final Map<String, Object> user = new HashMap<>();
 
-                if (result.getContents().equals("cingrous_in")) {
-                    user.put("in_time", formattedTime);
-                    DbYear.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            try {
-                                DbMonth.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        try {
-                                            DbDate.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                    try {
-                                                        DbUid.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                                try {
-                                                                    Map<String, Object> InTimeData = Objects.requireNonNull(task.getResult()).getData();
-                                                                    assert InTimeData != null;
-                                                                    progressbar.dismiss();
-                                                                    showAlertDialog("You are already in Cingrous from "
-                                                                                    + InTimeData.get("in_time") + " Onwards."
-                                                                            , Student.this, "", "Done");
-                                                                } catch (NullPointerException e) {
-                                                                    DbUid.set(user);
-                                                                    progressbar.dismiss();
-                                                                    showAlertDialog("In Time : " + formattedTime
-                                                                            , Student.this, "", "Done");
+                switch (result.getContents()) {
+                    case "cingrous_in":
+                        user.put("in_time", formattedTime);
+                        user.put("name", model_class.getName());
+
+                        DbYear.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                try {
+                                    DbMonth.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            try {
+                                                DbDate.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        try {
+                                                            DbUid.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                    try {
+                                                                        Map<String, Object> InTimeData = Objects.requireNonNull(task.getResult()).getData();
+                                                                        assert InTimeData != null;
+                                                                        progressbar.dismiss();
+                                                                        showAlertDialog("You are already in Cingrous from "
+                                                                                        + InTimeData.get("in_time") + " Onwards."
+                                                                                , Student.this, "", "Done");
+                                                                    } catch (NullPointerException e) {
+                                                                        DbUid.set(user);
+                                                                        progressbar.dismiss();
+                                                                        showAlertDialog("In Time : " + formattedTime
+                                                                                , Student.this, "", "Done");
+                                                                    }
                                                                 }
-                                                            }
-                                                        });
-                                                    } catch (NullPointerException e) {
-                                                        DbUid.set(user);
-                                                        progressbar.dismiss();
-                                                        showAlertDialog("In Time : " + formattedTime
-                                                                , Student.this, "", "Done");
+                                                            });
+                                                        } catch (NullPointerException e) {
+                                                            DbUid.set(user);
+                                                            progressbar.dismiss();
+                                                            showAlertDialog("In Time : " + formattedTime
+                                                                    , Student.this, "", "Done");
+                                                        }
                                                     }
-                                                }
-                                            });
-                                        } catch (NullPointerException e) {
-                                            DbUid.set(user);
-                                            progressbar.dismiss();
-                                            showAlertDialog("In Time : " + formattedTime
-                                                    , Student.this, "", "Done");
+                                                });
+                                            } catch (NullPointerException e) {
+                                                DbUid.set(user);
+                                                progressbar.dismiss();
+                                                showAlertDialog("In Time : " + formattedTime
+                                                        , Student.this, "", "Done");
+                                            }
                                         }
-                                    }
-                                });
-                            } catch (NullPointerException e) {
-                                DbUid.set(user);
-                                progressbar.dismiss();
-                                showAlertDialog("In Time : " + formattedTime
-                                        , Student.this, "", "Done");
+                                    });
+                                } catch (NullPointerException e) {
+                                    DbUid.set(user);
+                                    progressbar.dismiss();
+                                    showAlertDialog("In Time : " + formattedTime
+                                            , Student.this, "", "Done");
+                                }
                             }
-                        }
-                    });
-                }else if (result.getContents().equals("cingrous_out")) {
-                    LayoutInflater inflater = getLayoutInflater();
-                    @SuppressLint("InflateParams") final View customView = inflater.inflate(R.layout.todays_task_activity, null);
-                    final TextInputEditText activity_content = customView.findViewById(R.id.today_s_activity_content_at_out_qr_code_found);
-                    Button submit_btn = customView.findViewById(R.id.today_s_activity_submit_button_at_out_qr_code_found);
+                        });
+                        break;
+                    case "cingrous_out":
+                        LayoutInflater inflater = getLayoutInflater();
+                        @SuppressLint("InflateParams") final View customView = inflater.inflate(R.layout.todays_task_activity, null);
+                        final TextInputEditText activity_content = customView.findViewById(R.id.today_s_activity_content_at_out_qr_code_found);
+                        Button submit_btn = customView.findViewById(R.id.today_s_activity_submit_button_at_out_qr_code_found);
 
-                    AlertDialog.Builder alert = new AlertDialog.Builder(Student.this);
-                    alert.setView(customView);
-                    alert.setCancelable(false);
-                    final AlertDialog dialog = alert.create();
-                    dialog.show();
+                        AlertDialog.Builder alert = new AlertDialog.Builder(Student.this);
+                        alert.setView(customView);
+                        alert.setCancelable(false);
+                        final AlertDialog dialog = alert.create();
+                        dialog.show();
 
-                    submit_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                        submit_btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-                            if (activity_content.length() > 10) {
-                                final String activity_done = Objects.requireNonNull(activity_content.getText()).toString().trim();
-                                user.put("out_time", formattedTime);
-                                user.put("activity", activity_done);
-                                db.collection(year).document(month).collection(date1).document(Uid).update(user);
-                                dialog.dismiss();
-                                progressbar.dismiss();
-                                showAlertDialog("Out Time : " + formattedTime + "\n Activity : " + activity_done
-                                        , Student.this, "", "Done");
-                            } else {
-                                activity_content.setError("This field should contain minimum of 10 characters");
+                                if (activity_content.length() > 10) {
+                                    final String activity_done = Objects.requireNonNull(activity_content.getText()).toString().trim();
+                                    user.put("out_time", formattedTime);
+                                    user.put("activity", activity_done);
+                                    db.collection(year).document(month).collection(date1).document(Uid).update(user);
+                                    dialog.dismiss();
+                                    progressbar.dismiss();
+                                    showAlertDialog("Out Time : " + formattedTime + "\n Activity : " + activity_done
+                                            , Student.this, "", "Done");
+                                } else {
+                                    activity_content.setError("This field should contain minimum of 10 characters");
+                                }
                             }
-                        }
-                    });
-                }else {
-                    showAlertDialog("please verify your QR Code", Student.this, "Wrong QR Code", "OK");
-                    progressbar.dismiss();
+                        });
+                        break;
+                    default:
+                        showAlertDialog("please verify your QR Code", Student.this, "Wrong QR Code", "OK");
+                        progressbar.dismiss();
+                        break;
                 }
 
             }
